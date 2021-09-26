@@ -563,7 +563,7 @@ const
    smallHeadingSize = 4;
    srcdocVersion = 'SrcDoc 0.1';
    srcdocCopyright = 'Copyright (C) 2005 by Lukasz Czajka';
-   srcdocNoWarranty = 'SrcDoc comes without any warranty. See COPYING.';
+   srcdocNoWarranty = 'SrcDoc comes without any warranty. See LICENSE.';
    docwSectionSeparator = '@#@';
 {$ifdef WINDOWS }
    directorySeparator = '\';

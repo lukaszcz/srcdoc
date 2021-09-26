@@ -1228,7 +1228,6 @@ begin
    repeat
       recentComment := ReadComments(token2, token2);
       token2 := CallHandler(token2, GlobalKeywords, true);
-      WriteLn(token2); // ddd
       if errUnknownIdentifier then
       begin
          recentSymbol := token2;
@@ -1247,7 +1246,7 @@ begin
             token2 := ReadToken;
             declText.AppendToken('packed');
          end;
-         
+
          token2 := CallHandler(token2, TypeSectionKeywords, false);
          { if the keyword hasn't been recognised then just read
            everythig till a ';' and consider it to be the whole type
@@ -1438,18 +1437,18 @@ begin
    end;
    declText.AppendToken(';');
    
-   token2 := REadToken;
+   token2 := ReadToken;
    isForward := false;
    while RoutineModifiers.Has(token2) do
    begin
       if LowerCase(token2) = 'forward' then
          isForward := true;
       declText.AppendToken(token2);
-      token2 := REadToken;
+      token2 := ReadToken;
       while token2 <> ';' do
       begin
          declText.AppendToken(token2);
-         token2 := REadToken;
+         token2 := ReadToken;
       end;
       declText.AppendToken(';');
       token2 := ReadToken;
@@ -1468,7 +1467,7 @@ begin
       wasCodeBlock := true;
    end else
       wasCodeBlock := false;
-   
+
    if (Pos('.', symbol) = 0) and not
          (declaredSymbols.Has(symbol) and wasCodeBlock) then
       { don't duplicate class members or forward declarations }
@@ -1480,7 +1479,7 @@ begin
                                  LowerCase(token), linenum, recentComment);
    end else
       arguments.Free;
-      
+   
    Result := token2;
 end; { end ParseRoutine }
 
@@ -1606,7 +1605,7 @@ begin
                      VisibilityRec[currentVisibility].FName,
                      VisibilityRec[currentVisibility].FType,
                      token, linenum, recentComment);
-   
+
    savedVisibility := currentVisibility;
    currentVisibility := visPublic;
    
@@ -1620,7 +1619,7 @@ begin
          { assume we are reading a field }
       begin
          symbols := TStringList.Create;
-         declText.AppendToken(Readvariablelist(token2, false, symbols));
+         declText.AppendToken(ReadVariableList(token2, false, symbols));
 
          linenum := declText.LineNumber;
          Driver.RegisterDeclarations(declText.GetText, symbols, nil,

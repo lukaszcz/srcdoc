@@ -58,7 +58,7 @@ type
       includeDecl : Cardinal;
       { the number of declarations to ignore }
       ignoreDecl : Cardinal;
-                  
+
       { the root of the whole tree of declarations; does not represent
         any declaration itself }
       rootDeclaration : TRootDeclaration;
@@ -576,6 +576,8 @@ function TBasicDeclaration.QualifiedName : String;
 var
    i : Integer;
 begin
+   Assert (Names <> nil);
+   Assert (Names.Count > 0);
    if Names.Count > 1 then
    begin
       Result := '';
@@ -675,6 +677,7 @@ var
    sect : TSection;
 begin
    Assert(ParentDecl <> nil);
+   Assert(Names <> nil);
    for i := 1 to Names.Count - 1 do
    begin
       if ParentDecl.SearchDeclaration(Names[i]) = nil then
@@ -761,6 +764,7 @@ begin
       if not (ParentDecl is TRootDeclaration) then
       begin
          decls := TArray.Create;
+	 decls.OwnsItems := false;
          try
             ParentDecl.SearchRelated(Names[0], decls);
             if not decls.Empty then
@@ -787,7 +791,7 @@ begin
             WriteText(' ' + GetLangString(on_line_str) + ' ' + IntToStr(lineNum));
       end;
    end; { end with Section }   
-   
+
    if comment <> nil then
       comment.WriteOut(Section);
 end;
@@ -869,7 +873,11 @@ begin
    Assert(strs <> nil);
 
    if decls = nil then
+   begin
       decls := TArray.Create;
+      decls.OwnsItems := false;
+   end;
+   
    if unrecognized = nil then
       unrecognized := TStringList.Create;
 
@@ -1046,14 +1054,18 @@ var
    j : Integer;
    
 begin
-   Assert(aname <> '');
+   if aname = '' then
+   begin
+      Result := nil;
+      Exit;
+   end;
    
    secNames := nil;
    Result := nil;
    aname := Driver.LanguageParser.ParseIdentifierRef(Trim(aname));
    { break up <aname> into section names }
    secNames := BreakPathIntoSections(aname);
-   
+
    if (CmpStr(Section.Name, secNames[0])) then
    begin
       Result := AllSectionsPresent(self);
@@ -1067,10 +1079,10 @@ begin
       if Result <> nil then
          Exit;
    end;
-   
+
    { get the declarations on the path from self to the root }
    path := GetPath(self);
-   
+
    bestMatchingLevels := 0;
    bestDepthLevels := MAXINT;
    range := DDriver.AllDeclarations.EqualRange(secNames[0]);
@@ -1083,15 +1095,13 @@ begin
       
       path2 := GetPath(decl);
       
-      // this piece of code is dubious and I've forgotten what it was
-      // meant to be doing...
       i := Length(path);
       j := Length(path2);
       while (i > 0) and (j > 0) do
       begin
          Dec(j);
          Dec(i);
-         if path[i] <> path[j] then
+         if path[i] <> path2[j] then
             break;
       end;
       if (i = 0) and (j >= 0) then
@@ -1125,10 +1135,9 @@ begin
    { perform a depth-first search on the graph of the ancestors }
    
    deque := TDeque.Create;
-   
+   deque.OwnsItems := false;
    try
       PushAncestorsAtFront(deque);
-      
       while not deque.Empty do
       begin
          decl := TBasicDeclaration(deque.Front);
@@ -1158,6 +1167,7 @@ var
 begin
    Result := nil;
    decls := TArray.Create;
+   decls.OwnsItems := false;
    ParentDecl.SearchRelated(aname, decls);
    for i := decls.LowIndex to decls.HighIndex do
    begin
@@ -1616,16 +1626,19 @@ var
    sect : String;
 begin
    Assert(currDecl <> nil);
-   
+
    if currDecl.FindDeclaration(name) <> nil then
    begin
       { if not found then Find returns nil - exactly what we want }
-      unusedSectNumStr := duplicatedSymbols.Find(name);
+      if duplicatedSymbols.Has(name) then begin
+	 unusedSectNumStr := duplicatedSymbols.Find(name);
+      end else begin
+	 unusedSectNumStr := '0';
+      end;
       sect := name + '___overloaded___' + unusedSectNumStr;
       duplicatedSymbols[name] := IntToStr(StrToInt(unusedSectNumStr) + 1);
    end else
       sect := name;
-   
    Result := DocWriter.RegisterSection(sect, currDecl.Section, big);
 end;
 
@@ -1700,10 +1713,16 @@ begin
    end else
    begin
       Result := CommentParser.ParseComment(comment);
-      { -1 because one comment object is just now being used }
-      includeDecl := Result.IncludeDeclarations - 1;
-      recentComment.Free;
-      recentComment := TComment(Result.CopySelf);
+      if Result.IncludeDeclarations = 0 then
+      begin
+	 Result.Free;
+	 Result := nil;
+      end else begin
+	 { -1 because one comment object is just now being used }
+	 includeDecl := Result.IncludeDeclarations - 1;
+         recentComment.Free;
+         recentComment := TComment(Result.CopySelf);
+      end;
    end;
 end;
 
@@ -1822,6 +1841,7 @@ type
    begin
       Sect := asect;
       Derived := TArray.Create;
+      Derived.OwnsItems := false;
       Name := aname;
    end;
    
@@ -2181,6 +2201,7 @@ type
    begin
       Name := aname;
       DependsOn := TSingleList.Create;
+      DependsOn.OwnsItems := false;
       Visited := false;
    end;
    
@@ -2459,7 +2480,7 @@ begin
             if not IdentifyLanguageParser then
                Assert(false); { should never happen }
          end;
-         
+
          decl.WriteOut;
          iter.Advance;
       end;
@@ -2582,7 +2603,7 @@ begin
    Assert(asymbols.Count <> 0);
    Assert(adecl <> nil);
    Assert(currDecl <> nil);
-   
+
    if ((avisibilityType = vtPrivate) and
           not (optShowPrivate in Options)
       ) or
@@ -2596,7 +2617,7 @@ begin
    begin
       { ignore args, for now }
       args.Free;
-      
+
       recentLine := alinenum;
       commentObj := GetCommentObject(asymbols[0], acomment);
       if ignoreDecl = 0 then

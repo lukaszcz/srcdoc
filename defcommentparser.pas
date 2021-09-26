@@ -1151,18 +1151,10 @@ begin
    
    if paras.Empty then
       includedecl := 0;
-   
+
    Result := TComment.Create(paras, synopsis, currTitle,
                              currProfiles, includedecl, currFetchRelated);
 
-   includedecl := 0;
-   paras := nil;
-   synopsis := nil;
-   Parameters := nil;
-   currProfiles := nil;
-
-   { note: there is no need to play in the try..finally game if the
-     program is aborted on any exception anyway }
    reader.Destroy;
 end;
 
