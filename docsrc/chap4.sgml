@@ -1,0 +1,27 @@
+<chapter id="deps">
+<title>Dependencies</title>
+<para>
+
+With the <option>-d</option> or <option>--dependencies</option>
+command line option SrcDoc parses first the files on which a given
+file depends. Documentation is also generated for these files. If the
+exact path of the file is not specified within the module which
+depends on it, then the file is searched with various extensions in
+the <link linkend="src_path">source search path</link>. If the file is
+not found it is silently ignored.
+
+</para>
+<para>
+
+Files included using {$i ... } are not taken into account when parsing
+dependencies.
+
+</para>
+<para>
+
+Dependencies are parsed separately for the interface and the
+implementation.
+
+</para>
+</chapter>
+

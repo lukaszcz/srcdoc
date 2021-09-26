@@ -1,0 +1,395 @@
+<chapter id="command_list">
+<title>Comment commands</title>
+<para>
+A list of commands recognized by SrcDoc.
+</para>
+
+<sect1>
+<title>Note</title>
+<para>
+
+   Arguments may be passed to commands in two ways. The first one is
+to enclose the whole command list in braces ("(" and ")") and separate
+the arguments with commas. In this case, the leading whitespace before
+each argument are removed. Starting from the first non-whitespace
+character up to ")" or "," every character is then considered to be a
+part of the argument, including whitespace. We shall call the
+arguments passed in this way explicit arguments. The second way is
+just to write the arguments after the command name separating them
+with whitespace. In this approach, however, the number of the
+following words interpreted as arguments is precisely defined by the
+command. That is, depending on the command, different numbers of
+subsequent words are considered to be arguments. We shall call the
+arguments passed in this way implicit arguments.
+
+</para>
+<para>
+
+   The notation @cmd arg1 arg2 ... argN means that the command cmd
+takes exactly N implicit arguments. These arguments may be as well
+passed as explicit arguments. The notation @cmd(arg1, arg2, ..., argN)
+means that the command cmd takes exactly N explicit arguments. These
+arguments cannot be passed as implicit arguments.
+
+</para>
+<para>
+
+   All commands are case-insensitive.
+
+</para>
+</sect1>
+
+<sect1>
+<title>Alphabetical list of commands</title>
+
+<sect2>
+<title>&lt;xxx&gt;</title>
+<para>
+
+     Indicates that xxx is a name of some local symbol (ex. a routine
+     parameter). xxx must be a single word and may contain no
+     whitespace.
+
+</para>
+</sect2>
+
+<sect2>
+<title>_xxx_</title>
+<para>
+
+     Makes xxx emphasised. See @emphasis.
+
+</para>
+</sect2>
+
+<sect2>
+<title>\<parameter>char</parameter></title>
+<para>
+
+     If <parameter>char</parameter> is one of '_', '<', '>', '@' or
+     '\' then escapes it, i.e. prevents it from being specially
+     interpreted by the comment parser. '@' may also be escaped by
+     another '@'.
+
+</para>
+</sect2>
+
+<sect2>
+<title>@&lt;xxx&gt;</title>
+<para>
+
+     Creates a link to xxx. See @link.
+
+</para>
+</sect2>
+
+<sect2>
+<title>@c, @code</title>
+<para>
+
+     Makes the subsequent text be interpreted as source code and
+     formatted accordingly. See @end-code.
+
+</para>
+</sect2>
+
+<sect2>
+<title>@discard-subsequent-commands, @discard-commands</title>
+<para>
+
+     Discards all the commands after the current position. In other
+     words, interprets every subsequent @ character as a normal
+     character.
+
+</para>
+</sect2>
+
+<sect2>
+<title>@discard-recent-comment, @discard-recent-comments, @discard-comment</title>
+<para>
+
+     Discards the part of the comment before the current position.
+
+</para>
+</sect2>
+
+<sect2>
+<title>@e <parameter>word</parameter>, @emp <parameter>word</parameter>, @emphasis <parameter>word</parameter> @emphasis(<parameter>text</parameter>)</title>
+<para>
+
+     Makes <parameter>word</parameter> or <parameter>text</parameter>
+     emphasised. <parameter>word</parameter> may not contain
+     whitespace and must be composed of alpha-numeric characters
+     entirely. <parameter>text</parameter> may contain anything except
+     for ',' and ')'.
+
+</para>
+</sect2>
+
+<sect2>
+<title>@ec, @end-code</title>
+<para>
+
+     If @code is active then deactivates it. Otherwise does nothing.
+
+</para>
+</sect2>
+
+<sect2>
+<title>@fetch-related</title>
+<para>
+
+     Fetches a comment from a related method and prepends it to the
+     current comment. A related method is a method in an ancestor
+     class or an implemented interface or its ancestor with the same
+     name as the current method.
+
+</para>
+</sect2>
+
+<sect2>
+<title>@heading one_word_heading size, @heading(heading, size), @heading(heading)</title>
+<para>
+
+     Makes <parameter>heading</parameter> appear as a heading of size
+     <parameter>size</parameter>. <parameter>size</parameter> may be a
+     number form 1 (the largest) to 6 (the smallest). If the size is
+     omitted then uses the size number 3.
+
+</para>
+</sect2>
+
+<sect2>
+<title>@ignore-declarations n</title>
+<para>
+
+     Ignores n following declarations. Comments are read and processed
+     normally, and if one of the following comment includes an
+     @include-declarations command it overrides the effect of the
+     previous command.
+
+</para>
+</sect2>
+
+<sect2>
+<title>@include-declarations n</title>
+<para>
+
+     Indicates that the current comment is a common comment for n
+     following declarations.
+
+</para>
+</sect2>
+
+<sect2>
+<title>@id name, @identifier name</title>
+<para>
+     
+     Interprets <parameter>name</parameter> as a programming language
+     identifier and formats it accordingly.
+
+</para>
+</sect2>
+
+<sect2>
+<title>@kw arg, @keyword arg</title>
+<para>
+
+     Indicates that the argument arg is a language keyword. It will be
+     formatted accordingly.
+
+</para>
+</sect2>
+
+<sect2>
+<title>@link dest, @link(dest,label)</title>
+<para>
+
+     Creates a link to
+     <parameter>dest</parameter>. <parameter>dest</parameter> should
+     be the name of an identifier, either qualified or not. If
+     <parameter>dest</parameter> is not recognized as a valid symbol
+     then the link is written as a plain text. The text on the link is
+     <parameter>label</parameter> if the second argument is present.
+
+</para>
+</sect2>
+
+<sect2>
+<title>@linkfile dest, @linkfile(dest,label), @lf dest, @lf(dest,label)</title>
+<para>
+
+     Creates a link to a file named
+     <parameter>dest</parameter>. Causes the documentation to be
+     generated for this file as well.
+
+</para>
+</sect2>
+
+
+<sect2>
+<title>@nl, @newline</title>
+<para>
+
+     Insert a line break.
+
+</para>
+</sect2>
+
+<sect2>
+<title>@no-description</title>
+<para>
+
+     Inhibits the automatic generation of the description paragraph
+     for the current comment.
+
+</para>
+</sect2>
+
+<sect2>
+<title>@para, @para(heading)</title>
+<para>
+
+     Starts a new paragraph without a heading or with
+     <parameter>heading</parameter> as a heading. When starting a new
+     paragraph text formatting options are reset to their defaults.
+
+</para>
+</sect2>
+
+<sect2>
+<title>@param param_name [-] param_description...</title>
+<para>
+
+     Declares a parameter to a routine. param_name is the name of the
+     parameter, followed by an optional dash (-), followed by the
+     description of the parameter, which is a text block of any length
+     continuing up to the next non-inline command or the end of the
+     comment.
+
+</para>
+</sect2>
+
+<sect2>
+<title>@pre ... @endpre</title>
+<para>
+
+     Declares a pre-formatted text block. Anything between the @pre
+     and @endpre commands is written to the output file exactly as it
+     appears in the comment. No formatting, beautifying or even not
+     the interpretation of commands is performed. The only recognized
+     command after encountering @pre is @endpre.
+
+</para>
+</sect2>
+
+<sect2 id="cmd_profile">
+<title>@profile <parameter>profile_name</parameter>, @profile(<parameter>profile_names</parameter>), @profiles(<parameter>profile_names</parameter>)</title>
+<para>
+
+     Indicates that _all_ of the declarations that will be associated
+     with the comment should be written out only in the listed
+     profiles. If this appears in the unit comment then the
+     documentation for the whole unit is created only in the listed
+     profiles. There are two predefined profile names: 'user' and
+     'devel'. To exclude the declaration from all profiles use
+     '@profile none'. Profile names are not case-sensitive.
+
+</para>
+</sect2>
+
+<sect2>
+<title>@see [block]</title>
+<para>
+
+     Begins a new paragraph with the heading 'See' and creates a link
+     to each word in [block]. Discards any non-alphanumerical
+     characters in [block].
+
+</para>
+</sect2>
+
+<sect2 id="cmd_synopsis">
+<title>@synopsis [block]</title>
+<para>
+
+     Declares the synopsis for the current comment to be [block]. If
+     there is no @synopsis command in the whole comment and the
+     --synopsis command line option is on (the default), then the
+     first sentence of the comment is assumed to be the synopsis,
+     provided that it is not too long.
+
+</para>
+</sect2>
+
+<sect2>
+<title>@title(title)</title>
+<para>
+
+     Sets the title for the comment. If this appears in a file whose
+     only content is a comment then this sets the name by which the
+     file is referred to in the auto-generated contents. Otherwise, it
+     might or might not have any effect depending on the output format
+     and the size of the declaration/section associated with the
+     comment.
+
+</para>
+</sect2>
+
+<sect2>
+<title>@until-next-comment</title>
+<para>
+
+     Indicates that the current comment is a common comment for all
+     following declarations until another comment is encountered.
+
+</para>
+</sect2>
+
+</sect1>
+
+
+<sect1>
+<title>Comment-start Commands</title>
+<para>
+
+These commands are interpreted only if they appear at the very
+beginning of a comment. Not even a preceding sequence of whitespace is
+allowed. The @ character must be the first character of the comment.
+
+</para>
+
+<sect2>
+<title>{@discard ... }</title>
+<para>
+
+     Ignores the comment. Applies only to one, separate comment, even
+     when comments are joined. For example, from the following two
+     comments only the first one is ignored, even if adjoining
+     comments are merged.
+
+</para>
+<para>
+
+     {@discard A comment to ignore. }
+     { This one is not ignored. }
+
+</para>
+</sect2>
+
+<sect2>
+<title>{@decl <parameter>declaration</parameter> }</title>
+<para>
+
+     The effect of this comment is that anything after it in the
+     comment is treated af if it was outside a comment. It is often
+     useful when a declaration in a descendant class is not
+     overridden, but nonetheless needs a different description than
+     that in the ancestor.
+
+</para>
+</sect2>
+
+</sect1>
+
+</chapter>

@@ -1,0 +1,214 @@
+<chapter id="cmdline_options">
+<title>Command line options</title>
+<para>
+
+Mandatory options to long arguments are mandatory for short options,
+too.
+
+</para>
+
+<sect1>
+<title>-o, --output-directory=DIR</title>
+<para>
+
+Sets the output directory to DIR.
+
+</para>
+</sect1>
+
+<sect1>
+<title>-s, --source-directory=DIR</title>
+<para>
+
+Adds DIR to the list of directories searched for source files.
+
+</para>
+</sect1>
+
+<sect1>
+<title>-f, --format=FORMAT</title>
+<para>
+
+Sets the output format to FORMAT. For now, FORMAT may be only 'html'.
+
+</para>
+</sect1>
+
+<sect1>
+<title>-l, --language=LANG</title>
+<para>
+
+Sets the (human) language for output files.  For now, LANG may be only
+'en' or 'pl'.
+
+</para>
+</sect1>
+
+<sect1>
+<title>-p, --profile=PROF</title>
+<para>
+
+Sets the output profile. PROF may be either 'user' (default) or
+'devel'. In the user' profile only globally visible declarations and
+only public and protected members are included. In the 'devel' profile
+local declarations and private members are also included. You may
+override this with --protected, --private and -i.
+
+</para>
+</sect1>
+
+<sect1>
+<title>-c, --comment-parser=PARSER</title>
+<para>
+
+Sets the comment parser. PARSER may be 'srcdoc' (default) or
+'srcdoc_raw'. The raw parser just does not support several features
+and thus leaves things like &lt;name&gt; or _name_ intact.
+
+</para>
+</sect1>
+
+<sect1>
+<title>-d, --dependencies</title>
+<para>
+
+Try find and parse the modules (units) on which a given module depends
+first.
+
+</para>
+</sect1>
+
+<sect1>
+<title>-b, --beautify-comments</title>
+<para>
+
+'Beautify' the comments. When beautifying all ';' are changed to dots
+and all words beginning a sentence are capitalized.
+
+</para>
+</sect1>
+
+<sect1>
+<title>-t, --title=TITLE</title>
+<para>
+
+Sets the title for the whole documentation. This should be the name of
+the program or the library being documented.
+
+</para>
+</sect1>
+
+<sect1>
+<title>-i, --implementation-info=on/off</title>
+<para>
+
+Indicates whether to include local declarations in the generated
+documentation.
+
+</para>
+</sect1>
+
+<sect1 id="opt_protected">
+<title>--protected=on/off</title>
+<para>
+
+Indicates whether to show protected members.
+
+</para>
+</sect1>
+
+<sect1 id="opt_private">
+<title>--private=on/off</title>
+<para>
+
+Indicates whether to show private members.
+
+</para>
+</sect1>
+
+<sect1>
+<title>--table-border=on/off</title>
+<para>
+
+Indicates whether to draw borders for tables. On by default.
+
+</para>
+</sect1>
+
+<sect1>
+<title>--skip-separators=on/off</title>
+<para>
+
+If on then any sequence consisting of one non-alphanumeric character
+repeated more than 7 times is skipped. On by default.
+
+</para>
+</sect1>
+
+<sect1>
+<title>-j, --join-comments=on/off</title>
+<para>
+
+If on several comments one after another, possibly separated with
+whitespace, are joined into one comment. On by default.
+
+</para>
+</sect1>
+
+<sect1>
+<title>--fetch-comments=on/off</title>
+<para>
+
+Indicates whether to fetch comments from ancestor classes if no
+comment is present for a given member.
+
+</para>
+</sect1>
+
+<sect1>
+<title>--synopsis=on/off</title>
+<para>
+
+If on then if a comment does not contain the @synopsis command, the
+first sentence of the comment is assumed to be the synopsis.
+
+</para>
+</sect1>
+
+<sect1>
+<title>-v, --verbose</title>
+<para>
+
+Be verbose.
+
+</para>
+</sect1>
+
+<sect1>
+<title>-q, --quiet, --silent</title>
+<para>
+
+Suppress warnings.
+
+</para>
+</sect1>
+
+<sect1>
+<title>-h, --help</title>
+<para>
+
+Show the help screen.
+
+</para>
+</sect1>
+
+<sect1>
+<title>--version</title>
+<para>
+
+Show the version information.
+
+</para>
+</sect1>
+
+</chapter>

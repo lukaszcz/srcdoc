@@ -1,0 +1,57 @@
+Usage: srcdoc [options] files_to_parse
+Creates documentation of programs by parsing comments in source files.
+
+Mandatory options to long arguments are mandatory for short options, too
+-o, --output-directory=DIR      Sets the output directory to DIR.
+-s, --source-directory=DIR      Adds DIR to the list of directories searched
+                                for source files.
+-f, --format=FORMAT             Sets the output format to FORMAT. For now,
+                                FORMAT may be only 'html'.
+-l, --language=LANG             Sets the (human) language for output files.
+                                For now, LANG may be only 'en' or 'pl'.
+-p, --profile=PROF              Sets the output profile. PROF may be either
+                                'user' (default) or 'devel'. In the
+                                'user' profile only globally visible
+                                declarations and only public and protected
+                                class members are included. In the 'devel'
+                                profile local declarations and private members
+                                are also included. You may override this
+                                with --protected, --private and -i.
+-c, --comment-parser=PARSER     Sets the comment parser. PARSER may be
+                                'srcdoc' (default) or 'srcdoc_raw'. The
+                                raw parser just does not support several
+                                features and thus leaves things like <name>
+                                or _name_ intact.
+-d, --dependencies              Try find and parse the modules (units) on
+                                which a given module depends first.
+-b, --beautify-comments         'Beautify' the comments. When beautifying
+                                all ';' are changed to dots and all words
+                                beginning a sentence are capitalized.
+-t, --title=TITLE               Sets the title for the whole documentation.
+                                This should be the name of the program or
+                                the library being documented.
+-i, --implementation-info=on/off
+                                Indicates whether to include local declarations
+                                in the generated documentation.
+--protected=on/off              Indicates whether to show protected members.
+--private=on/off                Indicates whether to show private members.
+--table-border=on/off           Indicates whether to draw borders for tables.
+                                On by default.
+--skip-separators=on/off        If on then any sequence consisting of one
+                                non-alphanumeric character repeated more than
+                                7 times is skipped. On by default.
+-j, --join-comments=on/off      If on several comments one after another,
+                                possibly separated with whitespace, are
+                                joined into one comment. On by default.
+--fetch-comments=on/pff         Indicates whether to fetch comments from
+                                ancestor classes if no comment is present
+                                for a given member.
+--synopsis=on/off               If on then if a comment does not contain the
+                                @synopsis command, the first sentence of the
+                                comment is assumed to be the synopsis.
+-v, --verbose                   Be verbose.
+-q, --quiet, --silent           Suppress warnings.
+-h, --help                      Show this screen.
+--version                       Show the version information.
+
+

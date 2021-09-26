@@ -1,0 +1,30 @@
+<chapter id="invoking">
+<title>Invoking SrcDoc</title>
+<para>
+
+The simplest way to run SrcDoc is to type: <command>srcdoc
+file</command>. This uses the default options, parses
+<filename>file</filename> and writes output for it in the current
+directory.
+
+</para>
+<para>
+
+It should be noted that SrcDoc will refuse to parse any files whose
+extensions it doesn't recognize. Currently recognized extensions are:
+.pas, .pp, .p for Pascal or Delphi files, .txt .text for raw text
+files, .srd and .comment for files containing comments only.
+
+</para>
+<para id="src_path">
+
+You may specify the output directory by passing -o=DIR or
+--output-directory=DIR as a command line parameter. The -s or
+--source-directory parameters specify source directories, which are
+added to the search path for source files. The current directory is in
+the source search path by default, and if any of the input files is in
+a directory different from the current one, this directory is also
+added to the search path.
+
+</para>
+</chapter>

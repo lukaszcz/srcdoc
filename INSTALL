@@ -1,0 +1,22 @@
+
+		SrcDoc 0.1 installation from sources.
+
+1. Requirements.
+2. Linux/Unix.
+3. Windows.
+
+1. Requirements.
+
+To compile the program you will need the FPC >= 2.0 compiler, which
+may be downloaded from http://www.freepascal.org, and the PascalAdt
+library which may be downloaded from
+https://github.com/lukaszcz/pascaladt/.
+
+2. Linux/Unix.
+
+Simply run ./install.sh. You will be prompted for the directory with
+the include files and the binaries of the library.
+
+3. Windows.
+
+Should work with cygwin, but wasn't tested.

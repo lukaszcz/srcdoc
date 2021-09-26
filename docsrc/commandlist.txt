@@ -1,0 +1,238 @@
+--------------------------------------------------------------------------------
+A list of commands recognized by MakeDoc.
+--------------------------------------------------------------------------------
+
+Note:
+
+   Arguments may be passed to commands in two ways. The first one is
+to enclose the whole command list in braces ("(" and ")") and separate
+the arguments with commas. In this case, the leading whitespace before
+each argument are removed. Starting from the first non-whitespace
+character up to ")" or "," every character is then considered to be a
+part of the argument, including whitespace. We shall call the
+arguments passed in this way explicit arguments. The second way is
+just to write the arguments after the command name separating them
+with whitespace. In this approach, however, the number of the
+following words interpreted as arguments is precisely defined by the
+command. That is, depending on the command, different numbers of
+subsequent words are considered to be arguments. We shall call the
+arguments passed in this way implicit arguments.
+
+   The notation @cmd arg1 arg2 ... argN means that the command cmd
+takes exactly N implicit arguments. These arguments may be as well
+passed as explicit arguments. The notation @cmd(arg1, arg2, ..., argN)
+means that the command cmd takes exactly N explicit arguments. These
+arguments cannot be passed as implicit arguments.
+
+   All commands are case-insensitive.
+
+--------------------------------------------------------------------------------
+
+Alphabetical list of commands
+
+
+<xxx>
+
+     Indicates that xxx is a name of some local symbol (ex. a routine
+     parameter). xxx must be a single word and may contain no
+     whitespace.
+
+_xxx_
+
+     Makes xxx emphasised. See @emphasis.
+
+\<char>
+
+     If <char> is one of '_', '<', '>', '@' or '\' then escapes it,
+     i.e. prevents it from being specially interpreted by the comment
+     parser. '@' may also be escaped by another '@'.
+
+@<xxx>
+
+     Creates a link to xxx. See @link.
+
+@c
+@code
+
+     Makes the subsequent text be interpreted as source code and
+     formatted accordingly. See @end-code.
+
+@discard-subsequent-commands
+@discard-commands
+
+     Discards all the commands after the current position. In other
+     words, interprets every subsequent @ character as a normal
+     character.
+
+@discard-recent-comment
+@discard-recent-comments
+@discard-comment
+
+     Discards the part of the comment before the current position.
+
+@e <word>
+@emp <word>
+@emphasis <word>
+@emphasis(text)
+
+     Makes <word> or <text> emphasised. <word> may not contain
+     whitespace and must be composed of alpha-numeric characters
+     entirely. <text> may contain anything except for ',' and ')'.
+
+@ec
+@end-code
+
+     If @code is active then deactivates it. Otherwise does nothing.
+
+@fetch-related
+
+     Fetches a comment from a related method and prepends it to the
+     current comment. A related method is a method in an ancestor
+     class or an implemented interface or its ancestor with the same
+     name as the current method.
+
+@heading one_word_heading size
+@heading(heading, size)
+@heading(heading)
+
+     Makes <heading> appear as a heading of size <size>. <size> may be
+     a number form 1 (the largest) to 6 (the smallest). If the size is
+     omitted then uses the size number 3.
+
+@ignore-declarations n
+
+     Ignores n following declarations. Comments are read and processed
+     normally, and if one of the following comment includes an
+     @include-declarations command it overrides the effect of the
+     previous command.
+
+@include-declarations n
+
+     Indicates that the current comment is a common comment for n
+     following declarations.
+
+@id name
+@identifier name
+     
+     Interprets <name> as a programming language identifier and
+     formats it accordingly.
+
+@kw arg
+@keyword arg
+
+     Indicates that the argument arg is a language keyword. It will be
+     formatted accordingly.
+
+@link dest
+@link(dest,label)
+
+     Creates a link to <dest>. <dest> should be the name of an
+     identifier, either qualified or not. If <dest> is not recognized
+     as a valid symbol then the link is written as a plain text. The
+     text on the link is <label> if the second argument is present.
+
+@linkfile dest
+@linkfile(dest,label)
+@lf dest
+@lf(dest,label)
+
+     Creates a link to a file named <dest>. Causes the documentation
+     to be generated for this file as well.
+
+@nl
+@newline
+
+     Insert a line break.
+
+@no-description
+
+     Inhibits the automatic generation of the description paragraph
+     for the current comment.
+
+@para
+@para(heading)
+
+     Starts a new paragraph without a heading or with <heading> as a
+     heading. When starting a new paragraph text formatting options
+     are reset to their defaults.
+
+@param param_name [-] param_description...
+
+     Declares a parameter to a routine. param_name is the name of the
+     parameter, followed by an optional dash (-), followed by the
+     description of the parameter, which is a text block of any length
+     continuing up to the next non-inline command or the end of the
+     comment.
+
+@pre ... @endpre
+
+     Declares a pre-formatted text block. Anything between the @pre
+     and @endpre commands is written to the output file exactly as it
+     appears in the comment. No formatting, beautifying or even not
+     the interpretation of commands is performed. The only recognized
+     command after encountering @pre is @endpre.
+
+@profile <profile_name>
+@profile(<profile_names>)
+@profiles(<profile_names>)
+
+     Indicates that _all_ of the declarations that will be associated
+     with the comment should be written out only in the listed
+     profiles. If this appears in the unit comment then the
+     documentation for the whole unit is created only in the listed
+     profiles. There are two predefined profile names: 'user' and
+     'devel'. To exclude the declaration from all profiles use
+     '@profile none'. Profile names are not case-sensitive.
+
+@see [block]
+     
+     Begins a new paragraph with the heading 'See' and creates a link
+     to each word in [block]. Discards any non-alphanumerical
+     characters in [block].
+
+@synopsis [block]
+
+     Declares the synopsis for the current comment to be [block]. If
+     there is no @synopsis command in the whole comment and the
+     --synopsis command line option is on (the default), then the
+     first sentence of the comment is assumed to be the synopsis,
+     provided that it is not too long.
+
+@title(title)
+
+     Sets the title for the comment. If this appears in a file whose
+     only content is a comment then this sets the name by which the
+     file is referred to in the auto-generated contents. Otherwise, it
+     might or might not have any effect depending on the output format
+     and the size of the declaration/section associated with the
+     comment.
+
+@until-next-comment
+
+     Indicates that the current comment is a common comment for all
+     following declarations until another comment is encountered.
+
+
+Comment-start Commands
+
+These commands are interpreted only if they appear at the very
+beginning of a comment. Not even a preceding sequence of whitespace is
+allowed. The @ character must be the first character of the comment.
+
+{@discard ... }
+
+     Ignores the comment. Applies only to one, separate comment, even
+     when comments are joined. For example, from the following two
+     comments only the first one is ignored, even if adjoining
+     comments are merged.
+
+     {@discard A comment to ignore. }
+     { This one is not ignored. }
+
+{@decl <declaration> }
+
+     The effect of this comment is that anything after it in the
+     comment is treated af if it was outside a comment. It is often
+     useful when a declaration in a descendant class is not
+     overridden, but nonetheless needs a different description than
+     that in the ancestor.

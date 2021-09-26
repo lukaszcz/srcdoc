@@ -1,0 +1,19 @@
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V3.1//EN" [
+<!ENTITY chap1 SYSTEM "chap1.sgml">
+<!ENTITY chap2 SYSTEM "chap2.sgml">
+<!ENTITY chap3 SYSTEM "chap3.sgml">
+<!ENTITY chap4 SYSTEM "chap4.sgml">
+<!ENTITY chap5 SYSTEM "chap5.sgml">
+<!ENTITY chap6 SYSTEM "chap6.sgml">
+<!ENTITY chap7 SYSTEM "chap7.sgml">
+]>
+<book>
+<title>SrcDoc documentation</title>
+&chap1;
+&chap2;
+&chap3;
+&chap4;
+&chap5;
+&chap6;
+&chap7;
+</book>

@@ -1,0 +1,27 @@
+<chapter id="whatis">
+<title>What is SrcDoc?</title>
+<para>
+
+SrcDoc is a program for creating source code documentation of programs
+from comments in source files. In contrast to other similar programs
+the comments need not even be formatted. However, they will certainly
+look better if you apply some formatting.
+
+</para>
+<para>
+
+The goal of SrcDoc is to support multiple programming languages and
+multiple output formats. As of the current version, only Delphi/Pascal
+input and HTML output are supported.
+
+</para>
+<para>
+
+In addition to simply extracting comment and declarations, SrcDoc
+generates class and interface trees, determines which classes
+implement each interface and finds immediate descendants of each
+class. It also automatically generates an index of symbols and a table
+of contents for the whole documentation.
+
+</para>
+</chapter>
