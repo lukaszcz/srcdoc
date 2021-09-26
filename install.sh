@@ -88,16 +88,17 @@ MAKE_HTML=0
 if [ $DOCBOOK2HTML_PRESENT == 1 ]; then
     read -n 1 -p "Make HTML documentation? (y/n) "
     echo
-    if [ ! $REPLY -o $REPLY != "n" ]; then
+    if [ "$REPLY" != "n" ]; then
 	MAKE_HTML=1
     fi
 fi
+echo $MAKE_HTML
 
 MAKE_PDF=0
 if [ $DOCBOOK2PDF_PRESENT == 1 ]; then
     read -n 1 -p "Make PDF documentation? (y/n) "
     echo
-    if [ ! $REPLY -o $REPLY != "n" ]; then
+    if [ "$REPLY" != "n" ]; then
 	MAKE_PDF=1
     fi
 fi
@@ -108,22 +109,24 @@ if [ $MAKE_HTML == 1 -o $MAKE_PDF == 1 ]; then
 	process_dirname
 	DOCS_DIR=$REPLY
     else
-	DOCS_DIR="/usr/local/doc/srcdoc/"
+	DOCS_DIR="/usr/local/doc/srcdoc"
     fi
 fi
 
 checked_eval make $1 INCLUDE_DIR=$INCLUDE_DIR LIB_DIR=$LIB_DIR
 
+install srcdoc $BIN_DIR/srcdoc
+
 if [ ! -d $DOCS_DIR ]; then
-    checked_eval mkdir $DOCS_DIR
+    checked_eval mkdir -p $DOCS_DIR
 fi
 
 if [ \( ! -d ${DOCS_DIR}html/ \) -a \( $MAKE_HTML == 1 \) ]; then
-    checked_eval mkdir ${DOCS_DIR}html/
+    checked_eval mkdir -p ${DOCS_DIR}html/
 fi
 
 if [ \( ! -d ${DOCS_DIR}pdf/ \) -a \( $MAKE_PDF == 1 \) ]; then
-    checked_eval mkdir ${DOCS_DIR}pdf/
+    checked_eval mkdir -p ${DOCS_DIR}pdf/
 fi
 
 if [ $MAKE_HTML == 1 ]; then
@@ -134,6 +137,7 @@ if [ $MAKE_PDF == 1 ]; then
     checked_eval docbook2pdf -o ${DOCS_DIR}pdf/ docsrc/srcdoc.sgml
 fi
 
+echo
 echo "Installation finished."
 echo
 echo "Documentation is available at https://srcdoc.github.io"

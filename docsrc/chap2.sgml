@@ -1,12 +1,12 @@
-<chapter id="basic_cmt_form">
-<title>Basic comment formating</title>
+<chapter id="basicCmtForm">
+<title>Basic comment formatting</title>
 <para>
 
 A comment must be placed just before the declaration which it
 describes. By default, adjoining comments separated only be whitespace
 are joined into one comment. This behaviour may be controlled by the
 --join-comments command line switch. See <link
-linkend="cmdline_options">command line options</link>.
+linkend="cmdlineOptions">command line options</link>.
 
 </para>
 <para>
@@ -21,7 +21,7 @@ names are not case-sensitive.
 If no commands are present in the whole comment, then the comment is
 simply written under the heading 'Description'. By default, the first
 sentence is used as the synopsis. The synopsis may be also specified
-by the <link linkend="cmd_synopsis">@synopsis</link> command.
+by the <link linkend="cmdSynopsis">@synopsis</link> command.
 
 </para>
 <para>
@@ -52,7 +52,7 @@ names of identifiers, which are displayed as links under the heading
 
 Inline commands appear inside a section and don't terminate it. Two of
 these commands are, for instance, @code and @end-code. These two
-command are used to indicate that the text between them is a program
+commands are used to indicate that the text between them is a program
 code.
 
 </para>
@@ -82,7 +82,7 @@ comment-start command and an error will occur.
 <para>
 
 For more details on available commands and their complete list see the
-<link linkend="command_list">command list</link>.
+<link linkend="commandList">command list</link>.
 
 </para>
 </chapter>

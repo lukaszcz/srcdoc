@@ -84,7 +84,7 @@ type
    private
       FList : TListAdt;
    public
-      { @synopsis @description <alist> is a list of text objects }
+      { @synopsis <alist> is a list of text objects }
       constructor Create(alist : TListAdt);
       destructor Destroy; override;
       procedure WriteOut(section : TSection); override;

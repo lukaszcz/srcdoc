@@ -12,8 +12,8 @@ Profiles let you control which parts are written to output and which
 are ignored. There are two pre-defined profiles:
 <parameter>user</parameter> and <parameter>devel</parameter>. You may
 also specify your own profile, but you will have to use options line
-<option><link linkend="opt_protected">--protected</link></option> or
-<option><link linkend="opt_private">--private</link></option>.
+<option><link linkend="optProtected">--protected</link></option> or
+<option><link linkend="optPrivate">--private</link></option>.
 
 </para>
 <para>
@@ -27,14 +27,14 @@ profile every declaration is included.
 <para> 
 
 You may explicitly include or exclude a declaration by using the
-<command><link linkend="cmd_profile">@profile</link></command> command
+<command><link linkend="cmdProfile">@profile</link></command> command
 in the comment associated with the declaration. This command may be
 followed by one profile name or a list of profile names in which the
 declaration should be included. If there is more than one profile
 name, then the list must be enclosed in parentheses and the left
 bracket must follow immediately after the command name with no
 intervening whitespace. If the <command><link
-linkend="cmd_profile">@profile</link></command> command is not used
+linkend="cmdProfile">@profile</link></command> command is not used
 then whether to include the declaration is determined based on the
 rules from the above paragraph.
 

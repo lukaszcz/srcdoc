@@ -2276,7 +2276,7 @@ begin
       WriteMessage(srcdocVersion);
       WriteMessage(srcdocCopyright);
       WriteMessage(srcdocNoWarranty);
-      WriteMessage('');   
+      WriteMessage('');
       WriteMessage('Parsing source files...');
       
       while not (FileQueue.Empty and deque2.Empty) do

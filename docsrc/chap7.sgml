@@ -1,4 +1,4 @@
-<chapter id="command_list">
+<chapter id="commandList">
 <title>Comment commands</title>
 <para>
 A list of commands recognized by SrcDoc.
@@ -283,7 +283,7 @@ arguments cannot be passed as implicit arguments.
 </para>
 </sect2>
 
-<sect2 id="cmd_profile">
+<sect2 id="cmdProfile">
 <title>@profile <parameter>profile_name</parameter>, @profile(<parameter>profile_names</parameter>), @profiles(<parameter>profile_names</parameter>)</title>
 <para>
 
@@ -309,7 +309,7 @@ arguments cannot be passed as implicit arguments.
 </para>
 </sect2>
 
-<sect2 id="cmd_synopsis">
+<sect2 id="cmdSynopsis">
 <title>@synopsis [block]</title>
 <para>
 

@@ -7,7 +7,7 @@ command line option SrcDoc parses first the files on which a given
 file depends. Documentation is also generated for these files. If the
 exact path of the file is not specified within the module which
 depends on it, then the file is searched with various extensions in
-the <link linkend="src_path">source search path</link>. If the file is
+the <link linkend="srcPath">source search path</link>. If the file is
 not found it is silently ignored.
 
 </para>

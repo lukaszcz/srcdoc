@@ -17,7 +17,7 @@ input and HTML output are supported.
 </para>
 <para>
 
-In addition to simply extracting comment and declarations, SrcDoc
+In addition to simply extracting comments and declarations, SrcDoc
 generates class and interface trees, determines which classes
 implement each interface and finds immediate descendants of each
 class. It also automatically generates an index of symbols and a table

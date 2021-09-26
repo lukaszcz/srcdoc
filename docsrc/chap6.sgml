@@ -1,4 +1,4 @@
-<chapter id="cmdline_options">
+<chapter id="cmdlineOptions">
 <title>Command line options</title>
 <para>
 
@@ -108,7 +108,7 @@ documentation.
 </para>
 </sect1>
 
-<sect1 id="opt_protected">
+<sect1 id="optProtected">
 <title>--protected=on/off</title>
 <para>
 
@@ -117,7 +117,7 @@ Indicates whether to show protected members.
 </para>
 </sect1>
 
-<sect1 id="opt_private">
+<sect1 id="optPrivate">
 <title>--private=on/off</title>
 <para>
 
