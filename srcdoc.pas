@@ -142,7 +142,6 @@ procedure PrintVersion;
 begin
    WriteLn(srcdocVersion);
    WriteLn(srcdocCopyright);
-   WriteLn(srcdocNoWarranty);
    CleanExit(0);
 end;
 

@@ -30,7 +30,7 @@ uses
 
 const
    MAX_ARGS = 256;
-   declInfinite = -1;
+   declInfinite = $FFFF;
    maxRepeatedCharCount = 7;
 
 type
@@ -41,7 +41,7 @@ type
       reader : TStringReader;
       { the current paragraph }
       currPara : TCommentParagraph;
-      { current allowed profiles }
+      { currently allowed profiles }
       currProfiles : TStrings;
       { a list of the paragraphs of the comment currently being
         parsed; this object should be maintained by the ParseComment
@@ -60,7 +60,7 @@ type
       encounteredDescription : Boolean;
       { the number of declarations to associate with the comment
         (the default is 1) }
-      includeDecl : Integer;
+      includeDecl : Cardinal;
       { whether to discard commands or not }
       fDiscardCommands : Boolean;
       { holds the recently read arguments }
@@ -416,10 +416,12 @@ begin
       THandler.Create(@HandleUntilNextComment);
    
    currPara := TCommentParagraph.Create(self);
+   currProfiles := nil;
 end; { end TDefaultCommentParser.Create }
 
 destructor TDefaultCommentParser.Destroy;
 begin
+   currProfiles.Free;
    currPara.Free;
    CommandHandlers.Free;
    UnrecognizedCommands.Free;
@@ -629,10 +631,17 @@ begin
 end;
 
 function TDefaultCommentParser.HandleIncludeDecl(const command : String) : String;
+var
+   i : Integer;
 begin
    Result := '';
    try
-      IncludeDecl := StrToInt(reader.ReadWord);
+      i := StrToInt(reader.ReadWord);
+      if i >= 0 then begin
+	 IncludeDecl := i;
+      end else begin
+	 IncludeDecl := declInfinite;
+      end
    except
       on EConvertError do
          Driver.CommentError('Expected a number');

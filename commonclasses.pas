@@ -183,7 +183,7 @@ type
         whole comment; non-nil if the comment has a synopsis; the
         synopsis paragraph should not include a heading }
       FSynopsis : TParagraph;
-      FInclDecl : Integer;
+      FInclDecl : Cardinal;
       FTitle : String;
       FProfiles : TStrings;
       FFetchRelated : Boolean;
@@ -193,7 +193,7 @@ type
         sysopsis for the comment or nil if there's no synopsis }
       constructor Create(aparas : TListAdt; asynopsis : TParagraph;
                          atitle : String; aprofiles : TStrings;
-                         inclDecl : Integer; afetchRelated : Boolean);
+                         inclDecl : Cardinal; afetchRelated : Boolean);
       destructor Destroy; override;
       procedure WriteOut(section : TSection); override;
       function CopySelf : TTextObject; override;
@@ -208,7 +208,7 @@ type
       { the maximum number of following declarations that should be
         associated with this comment, provided that no other comment
         is found before these declarations }
-      property IncludeDeclarations : Integer read FInclDecl;
+      property IncludeDeclarations : Cardinal read FInclDecl;
       { indicates whether to prepend a comment of a related method to
         self }
       property FetchRelated : Boolean read FFetchRelated;
@@ -563,7 +563,6 @@ const
    smallHeadingSize = 4;
    srcdocVersion = 'SrcDoc 0.1';
    srcdocCopyright = 'Copyright (C) 2005 by Lukasz Czajka';
-   srcdocNoWarranty = 'SrcDoc comes without any warranty. See LICENSE.';
    docwSectionSeparator = '@#@';
 {$ifdef WINDOWS }
    directorySeparator = '\';
@@ -820,14 +819,24 @@ end;
    
 constructor TComment.Create(aparas : TListAdt; asynopsis : TParagraph;
                             atitle : String; aprofiles : TStrings;
-                            inclDecl : Integer; afetchRelated : Boolean);
+                            inclDecl : Cardinal; afetchRelated : Boolean);
+var
+   i : Integer;
 begin
    inherited Create;
    paras := aparas;
    FSynopsis := asynopsis;
    FInclDecl := inclDecl;
    FTitle := atitle;
-   FProfiles := aprofiles;
+   if aprofiles <> nil then
+   begin
+      FProfiles := TStringList.Create;
+      for i := 0 to aprofiles.Count - 1 do
+	 FProfiles.Add(aprofiles[i]);
+   end else
+   begin
+      FProfiles := nil;
+   end;
    FFetchRelated := afetchRelated;
 end;
 

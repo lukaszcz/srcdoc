@@ -92,13 +92,12 @@ if [ $DOCBOOK2HTML_PRESENT == 1 ]; then
 	MAKE_HTML=1
     fi
 fi
-echo $MAKE_HTML
 
 MAKE_PDF=0
 if [ $DOCBOOK2PDF_PRESENT == 1 ]; then
-    read -n 1 -p "Make PDF documentation? (y/n) "
+    read -n 1 -p "Make PDF documentation? (n/y) "
     echo
-    if [ "$REPLY" != "n" ]; then
+    if [ "$REPLY" == "y" ]; then
 	MAKE_PDF=1
     fi
 fi

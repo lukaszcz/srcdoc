@@ -1904,37 +1904,31 @@ var
 begin
    Assert(afile <> nil);
    
-//   try
-      InitializeUnit(afile);
+   InitializeUnit(afile);
       
-      str := ReadComments(token, '');
-      ReadUnitName(token);
-      unitcomment := ReadComments(token, '');
-      if unitcomment = '' then
-         unitcomment := str;
+   str := ReadComments(token, '');
+   ReadUnitName(token);
+   unitcomment := ReadComments(token, '');
+   if unitcomment = '' then
+      unitcomment := str;
       
-      if not Driver.RegisterUnit(unitNameStr, unitcomment) then
-      begin
-         FreeObjectsUsedInParsingUnit;
-         Exit;
-      end;
+   if not Driver.RegisterUnit(unitNameStr, unitcomment) then
+   begin
+      FreeObjectsUsedInParsingUnit;
+      Exit;
+   end;
       
-      token := LowerCase(token);      
+   token := LowerCase(token);      
       
-      if token = 'interface' then
-      begin
-         fInInterface := true;
-         currentVisibility := visGlobal;
-         token := LowerCase(ReadToken);
-      end; { else we are reading a program file }
+   if token = 'interface' then
+   begin
+      fInInterface := true;
+      currentVisibility := visGlobal;
+      token := LowerCase(ReadToken);
+   end; { else we are reading a program file }
       
-      ExecuteParsingLoop(token);
+   ExecuteParsingLoop(token);
       
-//   except
-//      FreeObjectsUsedInParsingUnit;
-//      raise;
-//   end;
-   
    try
       Driver.ProvideUnitInfo(interfaceUses);
    finally

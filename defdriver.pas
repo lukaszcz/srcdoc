@@ -2296,7 +2296,6 @@ begin
       WriteMessage('');
       WriteMessage(srcdocVersion);
       WriteMessage(srcdocCopyright);
-      WriteMessage(srcdocNoWarranty);
       WriteMessage('');
       WriteMessage('Parsing source files...');
       
