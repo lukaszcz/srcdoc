@@ -39,15 +39,14 @@ type
       endListTag : String;
 {$ifdef DEBUG }
       canWrite, wasOpened : Boolean;
-{$endif } 
-      currAttrs : TTextAttributeSet;
+{$endif }
       
       procedure BreakLine;
       procedure WriteString(str : String);
       procedure WriteLnString(str : String);
       
-      procedure CloseTextAttrsNotIn(attr : TTextAttributeSet);
-      procedure OpenTextAttrsIn(attr : TTextAttributeSet);
+      procedure OpenTextAttrs(attr : TTextAttributeSet);
+      procedure CloseTextAttrs(attr : TTextAttributeSet);
       
    protected
       { returns the stream to which the section should be written }
@@ -210,7 +209,6 @@ begin
    canWrite := false;
    wasOpened := false;
 {$endif }
-   currAttrs := [];
 end;
 
 procedure THtmlSection.BreakLine;
@@ -234,40 +232,39 @@ begin
    stream.WriteBuffer(str[1], Length(str));
 end;
 
-procedure THtmlSection.CloseTextAttrsNotIn(attr : TTextAttributeSet);
-begin   
-   if not (saEmphasis in attr) and (saEmphasis in currAttrs) then
-      WriteString('</em>');
-   if not (saKeyword in attr) and (saKeyword in currAttrs) then
-      WriteString('</span>');
-   if not (saLocalSymbol in attr) and (saLocalSymbol in currAttrs) then
-      WriteString('</span>');
-   if not (saGlobalSymbol in attr) and (saGlobalSymbol in currAttrs) then
-      WriteString('</span>');
-   if not (saCode in attr) and (saCode in currAttrs) then
-      WriteString('</span>');
+procedure THtmlSection.OpenTextAttrs(attr : TTextAttributeSet);
+begin
+   if saCode in attr then
+      WriteString('<span class="program_code">');
+   if saGlobalSymbol in attr then
+      WriteString('<span class="global_symbol">');
+   if saLocalSymbol in attr then
+      WriteString('<span class="local_symbol">');
+   if saKeyword in attr then
+      WriteString('<span class="keyword">');
+   if saEmphasis in attr then
+      WriteString('<em>');
 end;
 
-procedure THtmlSection.OpenTextAttrsIn(attr : TTextAttributeSet);
+procedure THtmlSection.CloseTextAttrs(attr : TTextAttributeSet);
 begin
-   if (saCode in attr) and not (saCode in currAttrs) then
-      WriteString('<span class="program_code">');
-   if (saGlobalSymbol in attr) and not (saGlobalSymbol in currAttrs) then
-      WriteString('<span class="global_symbol">');
-   if (saLocalSymbol in attr) and not (saLocalSymbol in currAttrs) then
-      WriteString('<span class="local_symbol">');
-   if (saKeyword in attr) and not (saKeyword in currAttrs) then
-      WriteString('<span class="keyword">');
-   if (saEmphasis in attr) and not (saEmphasis in currAttrs) then
-      WriteString('<em>');
+   if saEmphasis in attr then
+      WriteString('</em>');
+   if saKeyword in attr then
+      WriteString('</span>');
+   if saLocalSymbol in attr then
+      WriteString('</span>');
+   if saGlobalSymbol in attr then
+      WriteString('</span>');
+   if saCode in attr then
+      WriteString('</span>');
 end;
 
 procedure THtmlSection.WriteText(text : String; attr : TTextAttributeSet);
 begin
    text := ConvertBadChars(text);
    
-   CloseTextAttrsNotIn(attr);
-   OpenTextAttrsIn(attr);
+   OpenTextAttrs(attr);
    
    if saPreformatted in attr then
    begin
@@ -283,6 +280,8 @@ begin
    begin
       WriteString(text);
    end;
+
+   CloseTextAttrs(attr);
 end;
 
 procedure THtmlSection.WriteLink(descr : String; section : TSection);
@@ -643,7 +642,7 @@ begin
    { create the .css file }
    stream := TFileStream.Create(outputDir + cssFile, fmCreate);
    WriteLnToStream(stream, '.program_code {font-family : monospace}');
-   WriteLnToStream(stream, '.keyword {color : turquoise}');
+   WriteLnToStream(stream, '.keyword {color : green}');
    WriteLnToStream(stream, '.local_symbol {text-decoration : underline}');
    WriteLnToStream(stream, '.fixed_pitch {font-family : monospace}');
    WriteLnToStream(stream, 'ul li {list-style : disc}');

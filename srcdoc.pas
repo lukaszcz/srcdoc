@@ -492,6 +492,9 @@ begin
    
    options := options + commentParser + profile;
    options := options - exclude_options;
+
+   if not DirectoryExists(outputDirectory) then
+      MkDir(outputDirectory);
    
    if writer = nil then
       writer := THtmlWriter.Create(outputDirectory);
