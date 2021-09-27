@@ -1161,7 +1161,12 @@ begin
 
    Result := TComment.Create(paras, synopsis, currTitle,
 			     currProfiles, includedecl, currFetchRelated);
+
+   includeDecl := 0;
    currProfiles := nil;
+   synopsis := nil;
+   Parameters := nil;
+
    reader.Destroy;
 end;
 
