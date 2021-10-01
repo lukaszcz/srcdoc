@@ -41,41 +41,41 @@ type
       { the title of the main contents file }
       ContentsTitle : String;
       { maps the names of the duplicated symbols in the current block
-	to the first unused function number that may be appended to
-	the symbol name to make it unique; the items stored are
-	strings which may be interpreted as integers }
+        to the first unused function number that may be appended to
+        the symbol name to make it unique; the items stored are
+        strings which may be interpreted as integers }
       duplicatedSymbols : TStringStringMap;
       duplicatedSymbolsStack : TStackAdt;
 
       { a string comparer appropriate for the current language (either
-	case-sensitive or case-insensitive) }
+        case-sensitive or case-insensitive) }
       StringComparer : IStringBinaryComparer;
 
       { the _copy_ of the recent comment; owned by the driver }
       recentComment : TComment;
       { the number of declarations left to which recentComment should
-	be applied if no other comment found }
+        be applied if no other comment found }
       includeDecl : Cardinal;
       { the number of declarations to ignore }
       ignoreDecl : Cardinal;
 
       { the root of the whole tree of declarations; does not represent
-	any declaration itself }
+        any declaration itself }
       rootDeclaration : TRootDeclaration;
       { the current block declaration inside which declarations are
-	currently being declared, i.e. the current block }
+        currently being declared, i.e. the current block }
       currDecl : TBlockDeclaration;
       { a stack of saved currDecls (TBlockDeclarations); they are
-	saved each time a new block is entered, and restored when the
-	block is finished }
+        saved each time a new block is entered, and restored when the
+        block is finished }
       declStack : TStackAdt;
 
       { a map from unit names to TUnitDeclarations; <Units> does not
-	own the declarations; they are owned by <rootDeclaration>;
-	automatically sorted (a sorted set) }
+        own the declarations; they are owned by <rootDeclaration>;
+        automatically sorted (a sorted set) }
       Units : TMap;
       { a list of TParsedFiles for files parsed that are not modules
-	(units); <OtherFiles> _owns_ its items }
+        (units); <OtherFiles> _owns_ its items }
       OtherFiles : TListAdt;
 
       { a list of all classes; does not own its items }
@@ -84,16 +84,16 @@ type
       AllInterfaces : TArrayAdt;
 
       { a hash table of all declarations; maps declaration names to
-	the declaration objects; may store duplicated items; used to
-	speed up searching for declarations by their names }
+        the declaration objects; may store duplicated items; used to
+        speed up searching for declarations by their names }
       AllDeclarations : TMap;
 
       { a map of interface names to the declarations of classes
-	implementing them; does not own its items; items may be
-	repeated }
+        implementing them; does not own its items; items may be
+        repeated }
       InterfacesImplementedBy : TMap;
       { a map of class names to the declarations of classes that are
-	immediate descendants of the given class name }
+        immediate descendants of the given class name }
       DerivedClasses : TMap;
 
       { sets containing file extensions belonging to particular groups }
@@ -105,31 +105,31 @@ type
       procedure GiveError(msg : String);
       function GetTitle(title : String) : String;
       { registeres a section for <name>; handles duplicate section
-	names; returns the section }
+        names; returns the section }
       function GetSection(const name : String; big : Boolean) : TSection;
       { checks if the comment matches the right profile }
       function CheckProfile(comment : TComment) : Boolean;
       { starts a new declaration block, like in a class or an
-	interface; obj is the declaration of the new block }
+        interface; obj is the declaration of the new block }
       procedure StartBlock(obj : TBlockDeclaration);
       { ends the current declaration block }
       procedure EndBlock;
       { returns an appropriate comment object taking into account
-	<comment>, includeDecl and recentComment; name is the name of
-	the symbol }
+        <comment>, includeDecl and recentComment; name is the name of
+        the symbol }
       function GetCommentObject(name, comment : String) : TComment;
 
       function CheckedOpenInputFile(const path : String) : TFileStream;
       { reads in a whole ASCII file and returns its contents in a
-	string }
+        string }
       function ReadWholeFile(filename : String) : String;
       { creates or returns an already existing section for the given
-	file; for raw text/comment files only ; the returned section
-	should _not_ be destroyed by the caller }
+        file; for raw text/comment files only ; the returned section
+        should _not_ be destroyed by the caller }
       function GetRawFileSection(filename : String) : TSection;
 
       { reads the entire contents of a file and processes it like a
-	comment }
+        comment }
       procedure ProcessRawCommentFile;
       procedure ProcessRawTextFile;
 
@@ -143,34 +143,34 @@ type
       { @param aContentsTitle - the title of the documentation }
       { @param aprofile - the name of the profile to use }
       constructor Create(aoptions : TOptions; adocwriter : TDocWriter;
-			 asourceDirs : TStrings;
-			 aContentsTitle, aprofile : String);
+                         asourceDirs : TStrings;
+                         aContentsTitle, aprofile : String);
       destructor Destroy; override;
       procedure Run(afilequeue : TStringDequeAdt); override;
       procedure RegisterFile(filename : String); override;
       function RegisterUnit(name : String;
-			    unitComment : String) : Boolean; override;
+                            unitComment : String) : Boolean; override;
       function OpenUnit(name : String) : Boolean; override;
       procedure ProvideUnitInfo(ainterfaceUses : TStrings); override;
       procedure ProvideUnitImplementationInfo(aimplUses : TStrings;
-					      aunitImplComment : String); override;
+                                              aunitImplComment : String); override;
       procedure RegisterDeclarations(adecl : TTextObject; asymbols : TStrings;
-				     args : TStrings; avisibility : String;
-				     avisibilityType : TVisibilityType;
-				     asymboltype : String; alinenum : Integer;
-				     acomment : String); override;
+                                     args : TStrings; avisibility : String;
+                                     avisibilityType : TVisibilityType;
+                                     asymboltype : String; alinenum : Integer;
+                                     acomment : String); override;
       procedure StartClass(decl : TTextObject; name : String;
-			   ancestors : TStrings; interfaces : TStrings;
-			   visibility : String; visibilitytype : TVisibilityType;
-			   symbolType : String; linenum : Integer;
-			   comment : String); override;
+                           ancestors : TStrings; interfaces : TStrings;
+                           visibility : String; visibilitytype : TVisibilityType;
+                           symbolType : String; linenum : Integer;
+                           comment : String); override;
       procedure FinishClass; override;
       procedure StartInterface(decl : TTextObject; aname : String;
-			       ancestors : TStrings; id : String;
-			       visibility : String;
-			       visibilitytype : TVisibilityType;
-			       symboltype : String;
-			       lineNum : Integer; comment : String); override;
+                               ancestors : TStrings; id : String;
+                               visibility : String;
+                               visibilitytype : TVisibilityType;
+                               symboltype : String;
+                               lineNum : Integer; comment : String); override;
       procedure FinishInterface; override;
 
       procedure SetIgnoreDeclarations(num : Cardinal); override;
@@ -204,22 +204,22 @@ type
       { names of all the things declared }
       Names : TStrings;
       { the declaration inside which self was declared; nil if it is a
-	root declaration (the root declaration must be of type
-	TRootDeclaration). }
+        root declaration (the root declaration must be of type
+        TRootDeclaration). }
       ParentDecl : TBlockDeclaration;
       { the section containing the declaration }
       Section : TSection;
       { this should be set in the constructor of TBlockDeclaration to
-	true; purely for efficiency reasons }
+        true; purely for efficiency reasons }
       IsBlockDeclaration : Boolean;
 
       { returns the name of the declaration together with the scope
-	qualifier }
+        qualifier }
       function QualifiedName : String;
 
    public
       constructor Create(anames : TStrings; asection : TSection;
-			 aparent : TBlockDeclaration);
+                         aparent : TBlockDeclaration);
       destructor Destroy; override;
    end;
 
@@ -227,7 +227,7 @@ type
    TDeclaration = class (TBasicDeclaration)
    private
       { this is false if the comment was fetched from some related
-	method }
+        method }
       ShouldDisposeComment : Boolean;
    protected
       SymbolType : String;
@@ -244,14 +244,14 @@ type
       Title : String;
 
       { writes out <decls> as links separating them with commas; also
-	writes unrecognized as a plain text; <decls> and
-	<unrecognized> must be non-nil }
+        writes unrecognized as a plain text; <decls> and
+        <unrecognized> must be non-nil }
       procedure WriteLinks(decls : TArrayAdt; unrecognized : TStrings);
 
       { writes a navigation panel; these are just several links for
-	navigation purposes; decl is the declaration after which the
-	panel is written; decl should be nil if it is a panel after
-	the unit-level description }
+        navigation purposes; decl is the declaration after which the
+        panel is written; decl should be nil if it is a panel after
+        the unit-level description }
       procedure WriteNavigationPanel;
       { opens all requisite sections }
       procedure OpenSections;
@@ -259,18 +259,18 @@ type
       procedure WriteHead; virtual;
       procedure WriteMiddle; virtual;
       { writes the closing part of the declaration (members + the
-	navigation panel) }
+        navigation panel) }
       procedure WriteTail; virtual;
 
    public
       { <acomment> may be nil to indicate no comment }
       constructor Create(adecl : TTextObject; asymbols : TStrings;
-			 avisibility : String; avisibilityType : TVisibilityType;
-			 asymboltype : String; alinenum : Cardinal;
-			 acomment : TComment; asection : TSection;
-			 aparentDecl : TBlockDeclaration);
+                         avisibility : String; avisibilityType : TVisibilityType;
+                         asymboltype : String; alinenum : Cardinal;
+                         acomment : TComment; asection : TSection;
+                         aparentDecl : TBlockDeclaration);
       constructor CreateSimple(anames : TStrings; asection : TSection;
-			       aparentDecl : TBlockDeclaration);
+                               aparentDecl : TBlockDeclaration);
       destructor Destroy; override;
       procedure WriteOut; virtual;
    end;
@@ -282,8 +282,8 @@ type
       { an array of @<TDeclarations> }
       Declarations : TArray;
       { a map of declaration names to the declaration objects;
-	<DeclsMap> does not own its items; it only caches objects from
-	@<Declarations> }
+        <DeclsMap> does not own its items; it only caches objects from
+        @<Declarations> }
       DeclsMap : TMap;
       { an array of TBasicDeclarations }
       Ancestors : TArrayAdt;
@@ -292,66 +292,66 @@ type
 
    protected
       { writes links to declarations which are associated in the table
-	with the name of self; writes a declaration only if it is
-	either an immediate descendant of self or if self is an
-	interface and the declaration implements it }
+        with the name of self; writes a declaration only if it is
+        either an immediate descendant of self or if self is an
+        interface and the declaration implements it }
       procedure WriteFromHashTable(table : TMap;
-				   heading : String);
+                                   heading : String);
       { <map> is a map of strings to TListAdt's. the procedure adds
-	<decl> to each list mapped to by one of the strings in <strs>;
-	if some strings in <strs> does not have an associated item in
-	<map>, then creates a list for this item and inserts it into
-	the map }
+        <decl> to each list mapped to by one of the strings in <strs>;
+        if some strings in <strs> does not have an associated item in
+        <map>, then creates a list for this item and inserts it into
+        the map }
       procedure FillMap(map : TMap; strs : TStrings;
-			decl : TDeclaration);
+                        decl : TDeclaration);
       { for each string in <strs> tires to find a declaration with
-	this name by calling SearchDeclaration; if found adds this
-	declaration to decls, otherwise adds the string to
-	unrecognized; if decls or unrecognized is nil then creates
-	them; destroys strs }
+        this name by calling SearchDeclaration; if found adds this
+        declaration to decls, otherwise adds the string to
+        unrecognized; if decls or unrecognized is nil then creates
+        them; destroys strs }
       procedure StringsToDeclarations(var decls : TArrayAdt;
-				      var unrecognized : TStrings;
-				      var strs : TStrings);
+                                      var unrecognized : TStrings;
+                                      var strs : TStrings);
 
       { sorts <decls> according to the symbolType field as
-	the primary key and to the Name fileld as the secondary key }
+        the primary key and to the Name fileld as the secondary key }
       procedure SortDeclarations;
       { writes out the declarations <decl>; first writes a table with
-	the synopsis'es of all the declarations; then writes a
-	navigation panel and then the declarations themselves; the
-	argument should be a vector of TDeclaration objects; decls
-	must be non-nil; parent is the delaration to which decls
-	belong; if there is no such declaration (i.e. decls are
-	unit-level declarations), then parent should be nil }
+        the synopsis'es of all the declarations; then writes a
+        navigation panel and then the declarations themselves; the
+        argument should be a vector of TDeclaration objects; decls
+        must be non-nil; parent is the delaration to which decls
+        belong; if there is no such declaration (i.e. decls are
+        unit-level declarations), then parent should be nil }
       procedure WriteDeclarations;
 
       { returns true if self contains some declarations, i.e. some
-	declarations were declared in the block of self }
+        declarations were declared in the block of self }
       function HasDeclarations : Boolean;
       { returns the most recently added declaration or nil if self
-	contains no declarations }
+        contains no declarations }
       function LastDeclaration : TDeclaration;
       { adds a declaration to the block declaration }
       procedure AddDeclaration(decl : TDeclaration);
       { finds a declaration with the name <name> in the declarations
-	in the current block _only_ }
+        in the current block _only_ }
       function FindDeclaration(name : String) : TDeclaration;
       { searches a declaration in _all_ declarations starting from
-	self; performs a breadth-first search on the whole tree of all
-	declarations, treating it as a graph and starting from self;
-	(in fact, AllDeclarations table is used to speed up the
-	search, bu the effect is roughly the same) }
+        self; performs a breadth-first search on the whole tree of all
+        declarations, treating it as a graph and starting from self;
+        (in fact, AllDeclarations table is used to speed up the
+        search, but the effect is roughly the same) }
       function SearchDeclaration(aname : String) : TBasicDeclaration;
       { searches for the nearest methods above and including self in
-	the class hierarchy and with the name <name>; adds found
-	declarations to <decls> }
+        the class hierarchy and with the name <name>; adds found
+        declarations to <decls> }
       procedure SearchRelated(name : String; decls : TArrayAdt);
       { fetches a related comment by calling SearchRelated }
       function FetchRelatedComment(aname : String) : TComment;
       { returns true if <decl> is present among the ancestors of self }
       function IsDerivedFrom(decl : TBasicDeclaration) : Boolean;
       { should push all declarations considered to be ancestors of
-	self at the front of <deque> }
+        self at the front of <deque> }
       procedure PushAncestorsAtFront(deque : TDequeAdt); virtual;
 
       procedure WriteHead; override;
@@ -360,11 +360,11 @@ type
 
    public
       constructor Create(adecl : TTextObject; aname : String;
-			 aancestors : TStrings;
-			 avisibility : String; avisibilitytype : TVisibilityType;
-			 asymboltype : String; alinenum : Cardinal;
-			 acomment : TComment; asection : TSection;
-			 aparentDecl : TBlockDeclaration);
+                         aancestors : TStrings;
+                         avisibility : String; avisibilitytype : TVisibilityType;
+                         asymboltype : String; alinenum : Cardinal;
+                         acomment : TComment; asection : TSection;
+                         aparentDecl : TBlockDeclaration);
       destructor Destroy; override;
       procedure WriteOut; override;
    end;
@@ -381,11 +381,11 @@ type
       procedure WriteHead; override;
    public
       constructor Create(adecl : TTextObject; aname : String;
-			 aancestors, ainterfaces : TStrings;
-			 avisibility : String; avisibilitytype : TVisibilityType;
-			 asymboltype : String; alinenum : Cardinal;
-			 acomment : TComment; asection : TSection;
-			 aparentDecl : TBlockDeclaration);
+                         aancestors, ainterfaces : TStrings;
+                         avisibility : String; avisibilitytype : TVisibilityType;
+                         asymboltype : String; alinenum : Cardinal;
+                         acomment : TComment; asection : TSection;
+                         aparentDecl : TBlockDeclaration);
       destructor Destroy; override;
    end;
 
@@ -397,11 +397,11 @@ type
       procedure WriteMiddle; override;
    public
       constructor Create(adecl : TTextObject; aname : String;
-			 aancestors : TStrings; aid : String;
-			 avisibility : String; avisibilityType : TVisibilityType;
-			 asymboltype : String; alinenum : Cardinal;
-			 acomment : TComment; asection : TSection;
-			 aparentDecl : TBlockDeclaration);
+                         aancestors : TStrings; aid : String;
+                         avisibility : String; avisibilityType : TVisibilityType;
+                         asymboltype : String; alinenum : Cardinal;
+                         acomment : TComment; asection : TSection;
+                         aparentDecl : TBlockDeclaration);
    end;
 
    TUnitDeclaration = class (TBlockDeclaration)
@@ -415,10 +415,10 @@ type
       constructor Create(aunitName : String; aunitComment : TComment);
       destructor Destroy; override;
       { this method should be called before writing the unit; it
-	provides necessary information }
+        provides necessary information }
       procedure ProvideInfo(ainterfaceUses : TStrings);
       procedure ProvideImplementationInfo(aimplUses : TStrings;
-					  aImplComment : TComment);
+                                          aImplComment : TComment);
       procedure WriteOut; override;
       property FileName : String read FFileName;
    end;
@@ -494,11 +494,11 @@ begin
       i := KmpFindSubstr(Result[j], docwSectionSeparator, 1, tab);
       if i <> -1 then
       begin
-	 { copy the part of the string after the separator }
-	 Result[j + 1] := system.Copy(Result[j], i + Length(docwSectionSeparator),
-				      Length(Result[j]));
-	 Result[j] := system.Copy(Result[j], 1, i - 1);
-	 Inc(j);
+         { copy the part of the string after the separator }
+         Result[j + 1] := system.Copy(Result[j], i + Length(docwSectionSeparator),
+                                      Length(Result[j]));
+         Result[j] := system.Copy(Result[j], 1, i - 1);
+         Inc(j);
       end;
    end;
 end;
@@ -527,11 +527,11 @@ begin
    if Result = 0 then
    begin
       Result := AnsiCompareStr(TDeclaration(obj1).Visibility,
-			       TDeclaration(obj2).Visibility);
+                               TDeclaration(obj2).Visibility);
       if Result = 0 then
       begin
-	 Result := AnsiCompareStr(TDeclaration(obj1).SymbolType,
-				  TDeclaration(obj2).SymbolType);
+         Result := AnsiCompareStr(TDeclaration(obj1).SymbolType,
+                                  TDeclaration(obj2).SymbolType);
       end;
    end;
 end;
@@ -557,7 +557,7 @@ end;
 { --------------------- TBasicDeclaration ---------------------------- }
 
 constructor TBasicDeclaration.Create(anames : TStrings; asection : TSection;
-				     aparent : TBlockDeclaration);
+                                     aparent : TBlockDeclaration);
 begin
    Names := anames;
    Section  := asection;
@@ -582,14 +582,14 @@ begin
    begin
       Result := '';
       for i := 0 to Names.Count - 2 do
-	 Result := Result + Names[i] + ', ';
+         Result := Result + Names[i] + ', ';
       Result := Result + Names[Names.Count - 1];
    end else if (ParentDecl <> nil) and
-		  ((ParentDecl is TClassDeclaration) or
-		      (ParentDecl is TInterfaceDeclaration)) then
+                  ((ParentDecl is TClassDeclaration) or
+                      (ParentDecl is TInterfaceDeclaration)) then
    begin
       Result := ParentDecl.Names[0] +
-	 DDriver.LanguageParser.ScopeResolutionToken + Names[0];
+         DDriver.LanguageParser.ScopeResolutionToken + Names[0];
    end else
       Result := Names[0];
 end;
@@ -597,11 +597,11 @@ end;
 { ------------------------ TDeclaration ------------------------------ }
 
 constructor TDeclaration.Create(adecl : TTextObject; asymbols : TStrings;
-				avisibility : String;
-				avisibilityType : TVisibilityType;
-				asymboltype : String; alinenum : Cardinal;
-				acomment : TComment; asection : TSection;
-				aparentDecl : TBlockDeclaration);
+                                avisibility : String;
+                                avisibilityType : TVisibilityType;
+                                asymboltype : String; alinenum : Cardinal;
+                                acomment : TComment; asection : TSection;
+                                aparentDecl : TBlockDeclaration);
 begin
    Assert(asymbols <> nil);
    Assert(asymbols.Count <> 0);
@@ -620,21 +620,21 @@ begin
    ShouldDisposeComment := true;
 
    if (Comment = nil) and (ParentDecl <> nil) and
-	 not (ParentDecl is TRootDeclaration) and
-	 (optFetchCommentsFromAncestors in Driver.Options) then
+         not (ParentDecl is TRootDeclaration) and
+         (optFetchCommentsFromAncestors in Driver.Options) then
    begin
       comment := ParentDecl.FetchRelatedComment(Names[0]);
       if comment <> nil then
-	 ShouldDisposeComment := false;
+         ShouldDisposeComment := false;
    end;
 end; { end constructor Create }
 
 constructor TDeclaration.CreateSimple(anames : TStrings; asection : TSection;
-				      aparentDecl : TBlockDeclaration);
+                                      aparentDecl : TBlockDeclaration);
 begin
    Create(nil, anames, GetLangString(global_str), vtPublic,
-	  GetLangString(file_str), 0,
-	  nil, asection, aparentDecl);
+          GetLangString(file_str), 0,
+          nil, asection, aparentDecl);
 end;
 
 destructor TDeclaration.Destroy;
@@ -659,7 +659,7 @@ begin
       decl := TBasicDeclaration(decls[i]);
       Section.WriteLink(decl.Names[0], decl.Section);
       if i <> decls.HighIndex then
-	 Section.WriteText(', ');
+         Section.WriteText(', ');
    end;
    if (unrecognized.Count <> 0) and (decls.Size <> 0) then
       Section.WriteText(', ');
@@ -667,7 +667,7 @@ begin
    begin
       Section.WriteText(unrecognized[i]);
       if i <> unrecognized.Count - 1 then
-	 Section.WriteText(', ');
+         Section.WriteText(', ');
    end;
 end;
 
@@ -682,11 +682,11 @@ begin
    begin
       if ParentDecl.SearchDeclaration(Names[i]) = nil then
       begin
-	 sect := Driver.DocWriter.RegisterSection(Names[i], ParentDecl.Section,
-						  false);
-	 sect.Open(Title);
-	 sect.Close;
-	 sect.Destroy;
+         sect := Driver.DocWriter.RegisterSection(Names[i], ParentDecl.Section,
+                                                  false);
+         sect.Open(Title);
+         sect.Close;
+         sect.Destroy;
       end;
    end;
    Section.Open(Title);
@@ -701,28 +701,28 @@ begin
    begin
       if self <> nil then
       begin
-	 NewParagraph;
+         NewParagraph;
 
-	 cols := 3;
-	 SetLength(widths, cols);
-	 widths[0] := 33;
-	 widths[1] := 33;
-	 widths[2] := 33;
+         cols := 3;
+         SetLength(widths, cols);
+         widths[0] := 33;
+         widths[1] := 33;
+         widths[2] := 33;
 
-	 StartTable(widths, cols);
-	 WriteLink(Names[0], Section);
-	 if not (ParentDecl is TRootDeclaration) then
-	 begin
-	    NextCell;
-	    WriteLink(ParentDecl.Names[0], ParentDecl.Section);
-	    if not (ParentDecl.ParentDecl is TRootDeclaration) then
-	    begin
-	       NextCell;
-	       WriteLink(ParentDecl.ParentDecl.Names[0],
-			 ParentDecl.ParentDecl.Section);
-	    end;
-	 end;
-	 FinishTable;
+         StartTable(widths, cols);
+         WriteLink(Names[0], Section);
+         if not (ParentDecl is TRootDeclaration) then
+         begin
+            NextCell;
+            WriteLink(ParentDecl.Names[0], ParentDecl.Section);
+            if not (ParentDecl.ParentDecl is TRootDeclaration) then
+            begin
+               NextCell;
+               WriteLink(ParentDecl.ParentDecl.Names[0],
+                         ParentDecl.ParentDecl.Section);
+            end;
+         end;
+         FinishTable;
       end;
    end;
 end;
@@ -740,14 +740,14 @@ begin
 
       if visibility <> '' then
       begin
-	 WriteHeading(GetLangString(Visibility_str), subHeadingSize);
-	 WriteText(visibility);
+         WriteHeading(GetLangString(Visibility_str), subHeadingSize);
+         WriteText(visibility);
       end;
 
       if accessibility <> '' then
       begin
-	 WriteHeading(GetLangString(Access_str), subHeadingSize);
-	 WriteText(accessibility);
+         WriteHeading(GetLangString(Access_str), subHeadingSize);
+         WriteText(accessibility);
       end;
    end; { end with }
 end;
@@ -763,32 +763,32 @@ begin
    begin
       if not (ParentDecl is TRootDeclaration) then
       begin
-	 decls := TArray.Create;
-	 decls.OwnsItems := false;
-	 try
-	    ParentDecl.SearchRelated(Names[0], decls);
-	    if not decls.Empty then
-	    begin
-	       WriteHeading(GetLangString(Related_methods_str), subHeadingSize);
-	       for i := decls.LowIndex to decls.HighIndex do
-	       begin
-		  dd := TBasicDeclaration(decls[i]);
-		  WriteLink(dd.QualifiedName, dd.Section);
-		  if i <> decls.HighIndex then
-		     WriteText(', ');
-	       end;
-	    end;
-	 finally
-	    decls.Free;
-	 end;
+         decls := TArray.Create;
+         decls.OwnsItems := false;
+         try
+            ParentDecl.SearchRelated(Names[0], decls);
+            if not decls.Empty then
+            begin
+               WriteHeading(GetLangString(Related_methods_str), subHeadingSize);
+               for i := decls.LowIndex to decls.HighIndex do
+               begin
+                  dd := TBasicDeclaration(decls[i]);
+                  WriteLink(dd.QualifiedName, dd.Section);
+                  if i <> decls.HighIndex then
+                     WriteText(', ');
+               end;
+            end;
+         finally
+            decls.Free;
+         end;
       end;
 
       if filename <> '' then
       begin
-	 WriteHeading(GetLangString(Source_str), subHeadingSize);
-	 WriteText(filename);
-	 if lineNum <> 0 then
-	    WriteText(' ' + GetLangString(on_line_str) + ' ' + IntToStr(lineNum));
+         WriteHeading(GetLangString(Source_str), subHeadingSize);
+         WriteText(filename);
+         if lineNum <> 0 then
+            WriteText(' ' + GetLangString(on_line_str) + ' ' + IntToStr(lineNum));
       end;
    end; { end with Section }
 
@@ -813,12 +813,12 @@ end;
 { ---------------------- TBlockDeclaration --------------------------------- }
 
 constructor TBlockDeclaration.Create(adecl : TTextObject; aname : String;
-				     aancestors : TStrings;
-				     avisibility : String;
-				     avisibilityType : TVisibilityType;
-				     asymboltype : String; alinenum : Cardinal;
-				     acomment : TComment; asection : TSection;
-				     aparentDecl : TBlockDeclaration);
+                                     aancestors : TStrings;
+                                     avisibility : String;
+                                     avisibilityType : TVisibilityType;
+                                     asymboltype : String; alinenum : Cardinal;
+                                     acomment : TComment; asection : TSection;
+                                     aparentDecl : TBlockDeclaration);
 var
    asymbols : TStrings;
 begin
@@ -826,7 +826,7 @@ begin
    asymbols.Add(aname);
 
    inherited Create(adecl, asymbols, avisibility, avisibilityType,
-		    asymboltype, alinenum, acomment, asection, aparentDecl);
+                    asymboltype, alinenum, acomment, asection, aparentDecl);
 
    Declarations := TArray.Create;
    { Driver.LanguageParser is nil when creating the root declaration }
@@ -853,7 +853,7 @@ begin
 end;
 
 procedure TBlockDeclaration.FillMap(map : TMap; strs : TStrings;
-				    decl : TDeclaration);
+                                    decl : TDeclaration);
 var
    i : Integer;
 begin
@@ -864,8 +864,8 @@ begin
 end;
 
 procedure TBlockDeclaration.StringsToDeclarations(var decls : TArrayAdt;
-						  var unrecognized : TStrings;
-						  var strs : TStrings);
+                                                  var unrecognized : TStrings;
+                                                  var strs : TStrings);
 var
    decl : TBasicDeclaration;
    i : Integer;
@@ -886,9 +886,9 @@ begin
       decl := SearchDeclaration(strs[i]);
       if decl <> nil then
       begin
-	 decls.PushBack(decl);
+         decls.PushBack(decl);
       end else
-	 unrecognized.Add(strs[i]);
+         unrecognized.Add(strs[i]);
    end;
 
    strs.Free;
@@ -929,20 +929,20 @@ begin
 
       for i := Declarations.LowIndex to Declarations.HighIndex do
       begin
-	 Assert(TObject(Declarations[i]) is TDeclaration);
-	 decl := TDeclaration(Declarations[i]);
-	 for j := 0 to decl.Names.Count - 1 do
-	 begin
-	    WriteLink(decl.Names[j], decl.Section);
-	    NextCell;
-	    WriteText(decl.SymbolType);
-	    NextCell;
-	    WriteText(decl.Visibility);
-	    NextCell;
-	    if (decl.Comment <> nil) and (decl.Comment.Synopsis <> nil) then
-	       decl.Comment.Synopsis.WriteOut(Section);
-	    NextRow;
-	 end;
+         Assert(TObject(Declarations[i]) is TDeclaration);
+         decl := TDeclaration(Declarations[i]);
+         for j := 0 to decl.Names.Count - 1 do
+         begin
+            WriteLink(decl.Names[j], decl.Section);
+            NextCell;
+            WriteText(decl.SymbolType);
+            NextCell;
+            WriteText(decl.Visibility);
+            NextCell;
+            if (decl.Comment <> nil) and (decl.Comment.Synopsis <> nil) then
+               decl.Comment.Synopsis.WriteOut(Section);
+            NextRow;
+         end;
       end;
 
       FinishTable;
@@ -953,8 +953,8 @@ begin
       { now write the descriptions of the declarations themselves }
       for i := Declarations.LowIndex to Declarations.HighIndex do
       begin
-	 Assert(TObject(Declarations[i]) is TDeclaration);
-	 TDeclaration(Declarations[i]).WriteOut;
+         Assert(TObject(Declarations[i]) is TDeclaration);
+         TDeclaration(Declarations[i]).WriteOut;
       end;
    end; { end with DocWriter }
 end;
@@ -1018,20 +1018,20 @@ var
       Result := adecl;
       while (j < Length(secNames)) do
       begin
-	 if (Result.IsBlockDeclaration) then
-	 begin
-	    Result := TBasicDeclaration(TBlockDeclaration(Result).
-					   DeclsMap.Find(secNames[j]));
-	    if Result <> nil then
-	    begin
-	       Inc(j);
-	    end else
-	       break;
-	 end else
-	 begin
-	    Result := nil;
-	    break;
-	 end;
+         if (Result.IsBlockDeclaration) then
+         begin
+            Result := TBasicDeclaration(TBlockDeclaration(Result).
+                                           DeclsMap.Find(secNames[j]));
+            if Result <> nil then
+            begin
+               Inc(j);
+            end else
+               break;
+         end else
+         begin
+            Result := nil;
+            break;
+         end;
       end;
    end;
 
@@ -1041,11 +1041,11 @@ var
       i := 0;
       while adecl <> nil do
       begin
-	 Inc(i);
-	 if i > Length(Result) then
-	    SetLength(Result, Length(Result)*2);
-	 Result[i] := adecl;
-	 adecl := adecl.ParentDecl;
+         Inc(i);
+         if i > Length(Result) then
+            SetLength(Result, Length(Result)*2);
+         Result[i] := adecl;
+         adecl := adecl.ParentDecl;
       end;
       SetLength(Result, i);
    end;
@@ -1070,14 +1070,14 @@ begin
    begin
       Result := AllSectionsPresent(self);
       if Result <> nil then
-	 Exit;
+         Exit;
    end;
    decl := FindDeclaration(secNames[0]);
    if decl <> nil then
    begin
       Result := AllSectionsPresent(decl);
       if Result <> nil then
-	 Exit;
+         Exit;
    end;
 
    { get the declarations on the path from self to the root }
@@ -1099,26 +1099,26 @@ begin
       j := Length(path2);
       while (i > 0) and (j > 0) do
       begin
-	 Dec(j);
-	 Dec(i);
-	 if path[i] <> path2[j] then
-	    break;
+         Dec(j);
+         Dec(i);
+         if path[i] <> path2[j] then
+            break;
       end;
       if (i = 0) and (j >= 0) then
       begin
-	 depthLevels := j;
+         depthLevels := j;
       end;
       matchingLevels := Length(path2) - j;
 
       if (matchingLevels >= bestMatchingLevels) and
-	    (depthLevels <= bestDepthLevels) then
+            (depthLevels <= bestDepthLevels) then
       begin
-	 Result := AllSectionsPresent(decl);
-	 if Result <> nil then
-	 begin
-	    bestMatchingLevels := matchingLevels;
-	    bestDepthLevels := Depthlevels;
-	 end;
+         Result := AllSectionsPresent(decl);
+         if Result <> nil then
+         begin
+            bestMatchingLevels := matchingLevels;
+            bestDepthLevels := Depthlevels;
+         end;
       end;
 
       iter.Advance;
@@ -1140,18 +1140,18 @@ begin
       PushAncestorsAtFront(deque);
       while not deque.Empty do
       begin
-	 decl := TBasicDeclaration(deque.Front);
-	 deque.PopFront;
-	 if decl is TBlockDeclaration then
-	 begin
-	    block := TBlockDeclaration(decl);
-	    decl := block.FindDeclaration(name);
-	    if decl <> nil then
-	    begin
-	       decls.PushBack(decl);
-	    end;
-	    block.PushAncestorsAtFront(deque);
-	 end;
+         decl := TBasicDeclaration(deque.Front);
+         deque.PopFront;
+         if decl is TBlockDeclaration then
+         begin
+            block := TBlockDeclaration(decl);
+            decl := block.FindDeclaration(name);
+            if decl <> nil then
+            begin
+               decls.PushBack(decl);
+            end;
+            block.PushAncestorsAtFront(deque);
+         end;
       end;
 
    finally
@@ -1173,10 +1173,10 @@ begin
    begin
       ptr := decls[i];
       if (TBasicDeclaration(ptr) is TDeclaration) and
-	    (TDeclaration(ptr).Comment <> nil) then
+            (TDeclaration(ptr).Comment <> nil) then
       begin
-	 Result := TDeclaration(ptr).Comment;
-	 break;
+         Result := TDeclaration(ptr).Comment;
+         break;
       end;
    end;
    decls.Destroy;
@@ -1191,8 +1191,8 @@ begin
    begin
       if TBasicDeclaration(Ancestors[i]) = decl then
       begin
-	 Result := true;
-	 break;
+         Result := true;
+         break;
       end;
    end;
 end;
@@ -1211,19 +1211,19 @@ begin
    with Section do
    begin
       if (Ancestors <> nil) and
-	    (Ancestors.Size + UnrecognizedAncestors.Count <> 0) then
+            (Ancestors.Size + UnrecognizedAncestors.Count <> 0) then
       begin
-	 if Ancestors.Size + UnrecognizedAncestors.Count = 1 then
-	    WriteHeading(GetLangString(Immediate_ancestor_str), subHeadingSize)
-	 else
-	    WriteHeading(GetLangString(Immediate_ancestors_str), subHeadingSize);
-	 WriteLinks(Ancestors, UnrecognizedAncestors);
+         if Ancestors.Size + UnrecognizedAncestors.Count = 1 then
+            WriteHeading(GetLangString(Immediate_ancestor_str), subHeadingSize)
+         else
+            WriteHeading(GetLangString(Immediate_ancestors_str), subHeadingSize);
+         WriteLinks(Ancestors, UnrecognizedAncestors);
       end;
    end;
 end;
 
 procedure TBlockDeclaration.WriteFromHashTable(table : TMap;
-					       heading : String);
+                                               heading : String);
 var
    iter : TMapIterator;
    range : TMapIteratorRange;
@@ -1237,23 +1237,23 @@ begin
       iter := range.Start;
       while not iter.Equal(range.Finish) do
       begin
-	 Assert(TBasicDeclaration(iter.Item) is TBlockDeclaration);
-	 decl := TBlockDeclaration(iter.Item);
-	 if decl.IsDerivedFrom(self) or
-	       ((decl is TClassDeclaration) and
-		   (TClassDeclaration(decl).ImplementsInterface(self))
-	       ) then
-	 begin
-	    if not headingWritten then
-	    begin
-	       NewParagraph;
-	       WriteHeading(heading, subHeadingSize);
-	       headingWritten := true;
-	    end else
-	       WriteText(', ');
-	    WriteLink(decl.QualifiedName, decl.Section);
-	 end;
-	 iter.Advance;
+         Assert(TBasicDeclaration(iter.Item) is TBlockDeclaration);
+         decl := TBlockDeclaration(iter.Item);
+         if decl.IsDerivedFrom(self) or
+               ((decl is TClassDeclaration) and
+                   (TClassDeclaration(decl).ImplementsInterface(self))
+               ) then
+         begin
+            if not headingWritten then
+            begin
+               NewParagraph;
+               WriteHeading(heading, subHeadingSize);
+               headingWritten := true;
+            end else
+               WriteText(', ');
+            WriteLink(decl.QualifiedName, decl.Section);
+         end;
+         iter.Advance;
       end;
       range.Destroy;
    end;
@@ -1262,7 +1262,7 @@ end;
 procedure TBlockDeclaration.WriteMiddle;
 begin
    WriteFromHashTable(DDriver.DerivedClasses,
-		      GetLangString(Immediate_descendants_str));
+                      GetLangString(Immediate_descendants_str));
    inherited;
 end;
 
@@ -1285,15 +1285,15 @@ end;
 { ---------------------- TClassDeclaration --------------------------------- }
 
 constructor TClassDeclaration.Create(adecl : TTextObject; aname : String;
-				     aancestors, ainterfaces : TStrings;
-				     avisibility : String;
-				     avisibilityType : TVisibilityType;
-				     asymboltype : String; alinenum : Cardinal;
-				     acomment : TComment; asection : TSection;
-				     aparentDecl : TBlockDeclaration);
+                                     aancestors, ainterfaces : TStrings;
+                                     avisibility : String;
+                                     avisibilityType : TVisibilityType;
+                                     asymboltype : String; alinenum : Cardinal;
+                                     acomment : TComment; asection : TSection;
+                                     aparentDecl : TBlockDeclaration);
 begin
    inherited Create(adecl, aname, aancestors, avisibility, avisibilityType,
-		    asymboltype, alinenum, acomment, asection, aparentDecl);
+                    asymboltype, alinenum, acomment, asection, aparentDecl);
 
    FillMap(DDriver.InterfacesImplementedBy, ainterfaces, self);
    StringsToDeclarations(Interfaces, UnrecognizedInterfaces, ainterfaces);
@@ -1315,8 +1315,8 @@ begin
    begin
       if TBasicDeclaration(Interfaces[i]) = int then
       begin
-	 Result := true;
-	 break;
+         Result := true;
+         break;
       end;
    end;
 end;
@@ -1339,14 +1339,14 @@ begin
    with Section do
    begin
       if (Interfaces <> nil) and
-	    (Interfaces.Size + UnrecognizedInterfaces.Count <> 0) then
+            (Interfaces.Size + UnrecognizedInterfaces.Count <> 0) then
       begin
-	 if Interfaces.Size + UnrecognizedInterfaces.Count = 1 then
-	    WriteHeading(GetLangString(Implemented_interface_str), subHeadingSize)
-	 else
-	    WriteHeading(GetLangString(Implemented_interfaces_str),
-			 subHeadingSize);
-	 WriteLinks(Interfaces, UnrecognizedInterfaces);
+         if Interfaces.Size + UnrecognizedInterfaces.Count = 1 then
+            WriteHeading(GetLangString(Implemented_interface_str), subHeadingSize)
+         else
+            WriteHeading(GetLangString(Implemented_interfaces_str),
+                         subHeadingSize);
+         WriteLinks(Interfaces, UnrecognizedInterfaces);
       end;
    end;
 end;
@@ -1354,15 +1354,15 @@ end;
 { --------------------- TInterfaceDeclaration ------------------------------ }
 
 constructor TInterfaceDeclaration.Create(adecl : TTextObject; aname : String;
-					 aancestors : TStrings; aid : String;
-					 avisibility : String;
-					 avisibilityType : TVisibilityType;
-					 asymboltype : String; alinenum : Cardinal;
-					 acomment : TComment; asection : TSection;
-					 aparentDecl : TBlockDeclaration);
+                                         aancestors : TStrings; aid : String;
+                                         avisibility : String;
+                                         avisibilityType : TVisibilityType;
+                                         asymboltype : String; alinenum : Cardinal;
+                                         acomment : TComment; asection : TSection;
+                                         aparentDecl : TBlockDeclaration);
 begin
    inherited Create(adecl, aname, aancestors, avisibility, avisibilityType,
-		    asymboltype, alinenum, acomment, asection, aparentDecl);
+                    asymboltype, alinenum, acomment, asection, aparentDecl);
    Id := aid;
 end;
 
@@ -1373,8 +1373,8 @@ begin
    begin
       if Id <> '' then
       begin
-	 WriteHeading(GetLangString(ID_str), subHeadingSize);
-	 WriteText(Id);
+         WriteHeading(GetLangString(ID_str), subHeadingSize);
+         WriteText(Id);
       end;
    end;
 end;
@@ -1382,7 +1382,7 @@ end;
 procedure TInterfaceDeclaration.WriteMiddle;
 begin
    WriteFromHashTable(DDriver.InterfacesImplementedBy,
-		      GetLangString(Implemented_by_str));
+                      GetLangString(Implemented_by_str));
    inherited;
 end;
 
@@ -1391,9 +1391,9 @@ end;
 constructor TUnitDeclaration.Create(aunitName : String; aunitComment : TComment);
 begin
    inherited Create(nil, aunitName, TStringList.Create, GetLangString(global_str),
-		    vtPublic, '', 0, nil,
-		    Driver.DocWriter.RegisterSection(aunitName, nil, true),
-		    DDriver.rootDeclaration);
+                    vtPublic, '', 0, nil,
+                    Driver.DocWriter.RegisterSection(aunitName, nil, true),
+                    DDriver.rootDeclaration);
    FFileName := DDriver.currentFile;
    Title := GetLangString(Reference_for_str) + ' ' + aunitName;
    Comment := aunitComment;
@@ -1416,17 +1416,17 @@ begin
    Assert(UnrecognizedInterfaceUses = nil);
 
    StringsToDeclarations(Interfaceuses, UnrecognizedInterfaceUses,
-			 ainterfaceUses);
+                         ainterfaceUses);
 end;
 
 procedure TUnitDeclaration.ProvideImplementationInfo(aimplUses : TStrings;
-						     aImplComment : TComment);
+                                                     aImplComment : TComment);
 begin
    Assert(ImplUses = nil);
    Assert(UnrecognizedImplUses = nil);
    Assert(ImplComment = nil);
    StringsToDeclarations(impluses, UnrecognizedImplUses,
-			 aimplUses);
+                         aimplUses);
    implcomment := aImplComment;
 end;
 
@@ -1436,8 +1436,8 @@ var
 begin
    { ProvideInfo() should have been called earlier }
    Assert((interfaceUses <> nil) and
-	     ((implUses <> nil) or
-		 not (optShowImplementationInfo in Driver.Options)));
+             ((implUses <> nil) or
+                 not (optShowImplementationInfo in Driver.Options)));
 
    with Section do
    begin
@@ -1447,41 +1447,41 @@ begin
 
       if InterfaceUses.Size + UnrecognizedInterfaceUses.Count <> 0 then
       begin
-	 WriteHeading(GetLangString(Uses_in_interface_str), subHeadingSize);
-	 WriteLinks(interfaceUses, UnrecognizedInterfaceUses);
+         WriteHeading(GetLangString(Uses_in_interface_str), subHeadingSize);
+         WriteLinks(interfaceUses, UnrecognizedInterfaceUses);
       end;
 
       if (implUses <> nil) and
-	    (implUses.Size + UnrecognizedImplUses.Count <> 0) and
-	    (optShowImplementationInfo in Driver.Options) then
+            (implUses.Size + UnrecognizedImplUses.Count <> 0) and
+            (optShowImplementationInfo in Driver.Options) then
       begin
-	 WriteHeading(GetLangString(Uses_in_implementation_str), subHeadingSize);
-	 WriteLinks(implUses, UnrecognizedImplUses);
+         WriteHeading(GetLangString(Uses_in_implementation_str), subHeadingSize);
+         WriteLinks(implUses, UnrecognizedImplUses);
       end;
 
       if comment <> nil then
       begin
-	 if comment.FetchRelated then
-	 begin
-	    cmt := FetchRelatedComment(Names[0]);
-	    if cmt <> nil then
-	       cmt.WriteOut(Section);
-	 end;
-	 comment.WriteOut(Section);
+         if comment.FetchRelated then
+         begin
+            cmt := FetchRelatedComment(Names[0]);
+            if cmt <> nil then
+               cmt.WriteOut(Section);
+         end;
+         comment.WriteOut(Section);
       end;
 
       if (implComment <> nil) and
-	    (optShowImplementationInfo in Driver.Options) then
+            (optShowImplementationInfo in Driver.Options) then
       begin
-	 WriteHeading(GetLangString(Notes_on_the_implementation_str),
-		      bigHeadingSize);
-	 Implcomment.WriteOut(Section);
+         WriteHeading(GetLangString(Notes_on_the_implementation_str),
+                      bigHeadingSize);
+         Implcomment.WriteOut(Section);
       end;
 
       if not Declarations.Empty then
       begin
-	 WriteHeading(GetLangString(Declarations_str), bigHeadingSize);
-	 WriteDeclarations;
+         WriteHeading(GetLangString(Declarations_str), bigHeadingSize);
+         WriteDeclarations;
       end;
 
       Close;
@@ -1495,8 +1495,8 @@ const
    rootName = '@#$%^&root_declaration&^%$#@';
 begin
    inherited Create(nil, rootName, TStringList.Create,
-		    'root', vtPublic, '', 0, nil, TRootSection.Create(rootName),
-		    nil);
+                    'root', vtPublic, '', 0, nil, TRootSection.Create(rootName),
+                    nil);
 end;
 
 
@@ -1504,9 +1504,9 @@ end;
 { ----------------------------- TDefaultDriver ----------------------------- }
 
 constructor TDefaultDriver.Create(aoptions : TOptions;
-				  adocwriter : TDocWriter;
-				  asourcedirs : TStrings;
-				  aContentsTitle, aprofile : String);
+                                  adocwriter : TDocWriter;
+                                  asourcedirs : TStrings;
+                                  aContentsTitle, aprofile : String);
 begin
    inherited Create(aoptions, adocwriter, asourcedirs);
 
@@ -1576,6 +1576,7 @@ destructor TDefaultDriver.Destroy;
 begin
    FileQueue.Free;
 
+   Assert (duplicatedSymbolsStack.Empty, 'Duplicated symbols stack not empty');
    duplicatedSymbols.Free;
    duplicatedSymbolsStack.Free;
 
@@ -1597,6 +1598,7 @@ begin
 
    RawCommentExtensions.Free;
    RawTextExtensions.Free;
+
    inherited;
 end;
 
@@ -1631,9 +1633,9 @@ begin
    begin
       { if not found then Find returns nil - exactly what we want }
       if duplicatedSymbols.Has(name) then begin
-	 unusedSectNumStr := duplicatedSymbols.Find(name);
+         unusedSectNumStr := duplicatedSymbols.Find(name);
       end else begin
-	 unusedSectNumStr := '0';
+         unusedSectNumStr := '0';
       end;
       sect := name + '___overloaded___' + unusedSectNumStr;
       duplicatedSymbols[name] := IntToStr(StrToInt(unusedSectNumStr) + 1);
@@ -1650,15 +1652,15 @@ begin
    begin
       with comment do
       begin
-	 Result := false;
-	 for i := 0 to Profiles.Count - 1 do
-	 begin
-	    if Profiles[i] = Profile then
-	    begin
-	       Result := true;
-	       break;
-	    end;
-	 end;
+         Result := false;
+         for i := 0 to Profiles.Count - 1 do
+         begin
+            if Profiles[i] = Profile then
+            begin
+               Result := true;
+               break;
+            end;
+         end;
       end;
    end else
       Result := true;
@@ -1671,7 +1673,6 @@ begin
    currDecl := obj;
    duplicatedSymbolsStack.PushBack(duplicatedSymbols);
    duplicatedSymbols := TStringStringMap.Create(THashTable.Create);
-   duplicatedSymbols.OwnsItems := false;
 end;
 
 procedure TDefaultDriver.EndBlock;
@@ -1691,37 +1692,37 @@ begin
    if (Trim(comment) = '') then
    begin
       if ( (includeDecl <> 0) or
-	      ( (not currDecl.HasDeclarations) and
-		   (CmpStr(TDeclaration(currDecl.LastDeclaration).Names[0],
-			   name))
-	      )
-	 ) then
+              ( (not currDecl.HasDeclarations) and
+                   (CmpStr(TDeclaration(currDecl.LastDeclaration).Names[0],
+                           name))
+              )
+         ) then
       begin
-	 if includeDecl <> 0 then
-	    Dec(includeDecl);
-	 if recentComment <> nil then
-	    Result := TComment(recentComment.CopySelf)
-	 else
-	    Result := nil;
+         if includeDecl <> 0 then
+            Dec(includeDecl);
+         if recentComment <> nil then
+            Result := TComment(recentComment.CopySelf)
+         else
+            Result := nil;
       end else
       begin
-	 includeDecl := 0;
-	 Result := nil;
-	 recentComment.Free;
-	 recentComment := nil;
+         includeDecl := 0;
+         Result := nil;
+         recentComment.Free;
+         recentComment := nil;
       end;
    end else
    begin
       Result := CommentParser.ParseComment(comment);
       if Result.IncludeDeclarations = 0 then
       begin
-	 Result.Free;
-	 Result := nil;
+         Result.Free;
+         Result := nil;
       end else begin
-	 { -1 because one comment object is just now being used }
-	 includeDecl := Result.IncludeDeclarations - 1;
-	 recentComment.Free;
-	 recentComment := TComment(Result.CopySelf);
+         { -1 because one comment object is just now being used }
+         includeDecl := Result.IncludeDeclarations - 1;
+         recentComment.Free;
+         recentComment := TComment(Result.CopySelf);
       end;
    end;
 end;
@@ -1743,8 +1744,8 @@ begin
    begin
       if stream.Size >= MAXINT then
       begin
-	 ESrcdocError.Create('Files bigger than ' + IntToStr(MAXINT) +
-				' bytes not supported');
+         ESrcdocError.Create('Files bigger than ' + IntToStr(MAXINT) +
+                                ' bytes not supported');
       end;
       {$warnings off }
       size := stream.Size;
@@ -1770,8 +1771,8 @@ begin
       names := TStringList.Create;
       names.Add(filename);
       rootDeclaration.AddDeclaration(
-	 TDeclaration.CreateSimple(names, Result, rootDeclaration)
-				    );
+         TDeclaration.CreateSimple(names, Result, rootDeclaration)
+                                    );
    end else
       Result := decl.Section;
 end;
@@ -1827,10 +1828,10 @@ type
       { the name to be displayed }
       Name : String;
       { the section of the class/interface declaration which self
-	represents; may be nil if the declaration was not parsed }
+        represents; may be nil if the declaration was not parsed }
       Sect : TSection;
       { a list of TVertex'es representing declarations derived from
-	the declaration represented by self }
+        the declaration represented by self }
       Derived : TArrayAdt;
 
       constructor Create(const aname : String; asect : TSection);
@@ -1861,9 +1862,9 @@ type
       Assert(obj1 is TVertex);
       Assert(obj2 is TVertex);
       if ignoreCase then
-	 Result := CompareText(TVertex(obj1).Name, TVertex(obj2).Name)
+         Result := CompareText(TVertex(obj1).Name, TVertex(obj2).Name)
       else
-	 Result := CompareStr(TVertex(obj1).Name, TVertex(obj2).Name);
+         Result := CompareStr(TVertex(obj1).Name, TVertex(obj2).Name);
    end;
 
 procedure TDefaultDriver.WriteTree(section : TSection; classTree : Boolean);
@@ -1882,23 +1883,23 @@ var
    begin
       with section do
       begin
-	 if not liter.IsFinish then
-	 begin
-	    StartList(false);
-	    while not liter.IsFinish do
-	    begin
-	       v := TVertex(liter.Item);
-	       WriteLink(v.Name, v.Sect);
-	       Sort(v.Derived.RandomAccessStart, v.Derived.RandomAccessFinish,
-		    vertexComparer);
-	       WriteList(v.Derived.ForwardStart);
-	       liter.Advance;
-	       if not liter.IsFinish then
-		  NextListItem;
-	    end;
-	    FinishList;
-	 end;
-	 liter.Destroy;
+         if not liter.IsFinish then
+         begin
+            StartList(false);
+            while not liter.IsFinish do
+            begin
+               v := TVertex(liter.Item);
+               WriteLink(v.Name, v.Sect);
+               Sort(v.Derived.RandomAccessStart, v.Derived.RandomAccessFinish,
+                    vertexComparer);
+               WriteList(v.Derived.ForwardStart);
+               liter.Advance;
+               if not liter.IsFinish then
+                  NextListItem;
+            end;
+            FinishList;
+         end;
+         liter.Destroy;
       end;
    end;
 
@@ -1921,56 +1922,56 @@ begin
       vertexComparer := TVertexComparer.Create;
 
       if classTree then
-	 list := AllClasses
+         list := AllClasses
       else
-	 list := AllInterfaces;
+         list := AllInterfaces;
 
       { make a directed graph in which verticies are the
-	class/interface declarations and edges indicate that the
-	terminal vertex is derived from the initial vertex }
+        class/interface declarations and edges indicate that the
+        terminal vertex is derived from the initial vertex }
       for i := list.LowIndex to list.HighIndex do
       begin
-	 bdecl := TBlockDeclaration(list[i]);
-	 { get the vertex associated with bdecl }
-	 v := TVertex(AllVerticies.Find(bdecl.Section.Name));
-	 if v = nil then
-	 begin
-	    v := TVertex.Create(bdecl.Names[0], bdecl.Section);
-	    AllVerticies.Insert(bdecl.Section.Name, v);
-	 end;
+         bdecl := TBlockDeclaration(list[i]);
+         { get the vertex associated with bdecl }
+         v := TVertex(AllVerticies.Find(bdecl.Section.Name));
+         if v = nil then
+         begin
+            v := TVertex.Create(bdecl.Names[0], bdecl.Section);
+            AllVerticies.Insert(bdecl.Section.Name, v);
+         end;
 
-	 { add v as a child of all ancestors of v (bdecl) }
-	 for j := bdecl.Ancestors.LowIndex to bdecl.Ancestors.HighIndex do
-	 begin
-	    decl := TBasicDeclaration(bdecl.Ancestors[j]);
-	    if (classTree and (decl is TClassDeclaration)) or
-		  ((not classTree) and (decl is TInterfaceDeclaration)) then
-	    begin
-	       bdecl2 := TBlockDeclaration(bdecl.Ancestors[j]);
-	       v2 := TVertex(AllVerticies.Find(bdecl2.Section.Name));
-	       if v2 = nil then
-	       begin
-		  v2 := TVertex.Create(bdecl2.Names[0], bdecl2.Section);
-		  AllVerticies.Insert(bdecl2.Section.Name, v2);
-	       end;
-	       v2.Derived.PushBack(v);
-	    end;
-	 end;
-	 for j := 0 to bdecl.UnrecognizedAncestors.Count - 1 do
-	 begin
-	    str := bdecl.UnrecognizedAncestors[j];
-	    v2 := TVertex(AllVerticies.Find(str));
-	    if v2 = nil then
-	    begin
-	       v2 := TVertex.Create(bdecl.UnrecognizedAncestors[j], nil);
-	       AllVerticies.Insert(str, v2);
-	       TopVerticies.Insert(str, v2);
-	    end;
-	    v2.Derived.PushBack(v);
-	 end;
+         { add v as a child of all ancestors of v (bdecl) }
+         for j := bdecl.Ancestors.LowIndex to bdecl.Ancestors.HighIndex do
+         begin
+            decl := TBasicDeclaration(bdecl.Ancestors[j]);
+            if (classTree and (decl is TClassDeclaration)) or
+                  ((not classTree) and (decl is TInterfaceDeclaration)) then
+            begin
+               bdecl2 := TBlockDeclaration(bdecl.Ancestors[j]);
+               v2 := TVertex(AllVerticies.Find(bdecl2.Section.Name));
+               if v2 = nil then
+               begin
+                  v2 := TVertex.Create(bdecl2.Names[0], bdecl2.Section);
+                  AllVerticies.Insert(bdecl2.Section.Name, v2);
+               end;
+               v2.Derived.PushBack(v);
+            end;
+         end;
+         for j := 0 to bdecl.UnrecognizedAncestors.Count - 1 do
+         begin
+            str := bdecl.UnrecognizedAncestors[j];
+            v2 := TVertex(AllVerticies.Find(str));
+            if v2 = nil then
+            begin
+               v2 := TVertex.Create(bdecl.UnrecognizedAncestors[j], nil);
+               AllVerticies.Insert(str, v2);
+               TopVerticies.Insert(str, v2);
+            end;
+            v2.Derived.PushBack(v);
+         end;
 
-	 if bdecl.Ancestors.Size + bdecl.UnrecognizedAncestors.Count = 0 then
-	    TopVerticies.Insert(bdecl.Section.Name, v);
+         if bdecl.Ancestors.Size + bdecl.UnrecognizedAncestors.Count = 0 then
+            TopVerticies.Insert(bdecl.Section.Name, v);
       end; { end for all items in list }
 
       { write the tree }
@@ -2030,11 +2031,11 @@ type
       Assert(obj1 is TBasicDeclaration);
       Assert(obj2 is TBasicDeclaration);
       if ignoreCase then
-	 Result := AnsiCompareText(TBasicDeclaration(obj1).Section.Name,
-				   TBasicDeclaration(obj2).Section.Name)
+         Result := AnsiCompareText(TBasicDeclaration(obj1).Section.Name,
+                                   TBasicDeclaration(obj2).Section.Name)
       else
-	 Result := AnsiCompareText(TBasicDeclaration(obj1).Section.Name,
-				   TBasicDeclaration(obj2).Section.Name);
+         Result := AnsiCompareText(TBasicDeclaration(obj1).Section.Name,
+                                   TBasicDeclaration(obj2).Section.Name);
    end;
 
 procedure TDefaultDriver.GenerateSymbolIndex;
@@ -2046,8 +2047,8 @@ procedure TDefaultDriver.GenerateSymbolIndex;
       d := d.ParentDecl;
       while not (d is TRootDeclaration) do
       begin
-	 Result := d.Names[0] + LanguageParser.ScopeResolutionToken + Result;
-	 d := d.ParentDecl;
+         Result := d.Names[0] + LanguageParser.ScopeResolutionToken + Result;
+         d := d.ParentDecl;
       end;
    end;
 
@@ -2072,8 +2073,8 @@ begin
       iter := AllDeclarations.Start;
       while not iter.IsFinish do
       begin
-	 decls.PushBack(iter.Item);
-	 iter.Advance;
+         decls.PushBack(iter.Item);
+         iter.Advance;
       end;
       iter.Destroy;
 
@@ -2082,35 +2083,35 @@ begin
       section := DocWriter.RegisterSymbolIndexSection;
       with section do
       begin
-	 Open(GetLangString(Symbol_index_str));
+         Open(GetLangString(Symbol_index_str));
 
-	 WriteHeading(GetLangString(Symbol_index_str), bigHeadingSize);
-	 NewParagraph;
+         WriteHeading(GetLangString(Symbol_index_str), bigHeadingSize);
+         NewParagraph;
 
-	 lastDeclName := '';
-	 for i := decls.LowIndex to decls.HighIndex do
-	 begin
-	    decl := TBasicDeclaration(decls[i]);
-	    if decl is TDeclaration then
-	    begin
-	       if decl.Names[0] <> lastDeclName then
-	       begin
-		  { if not the first iteration then finish the previous
-		    list }
-		  if lastdeclname <> '' then
-		     FinishList;
-		  lastDeclName := decl.Names[0];
-		  WriteText(lastDeclName);
-		  StartList(false);
-	       end else
-		  NextListItem;
-	       WriteLink(GetPath(TDeclaration(decl)), decl.Section);
-	    end;
-	 end;
-	 if not decls.Empty then
-	    FinishList;
+         lastDeclName := '';
+         for i := decls.LowIndex to decls.HighIndex do
+         begin
+            decl := TBasicDeclaration(decls[i]);
+            if decl is TDeclaration then
+            begin
+               if decl.Names[0] <> lastDeclName then
+               begin
+                  { if not the first iteration then finish the previous
+                    list }
+                  if lastdeclname <> '' then
+                     FinishList;
+                  lastDeclName := decl.Names[0];
+                  WriteText(lastDeclName);
+                  StartList(false);
+               end else
+                  NextListItem;
+               WriteLink(GetPath(TDeclaration(decl)), decl.Section);
+            end;
+         end;
+         if not decls.Empty then
+            FinishList;
 
-	 Close;
+         Close;
       end;
 
    finally
@@ -2140,21 +2141,21 @@ begin
       NewParagraph;
       if not OtherFiles.Empty then
       begin
-	 StartList(true);
+         StartList(true);
 
-	 iter := OtherFiles.ForwardStart;
-	 while not iter.IsFinish do
-	 begin
-	    pf := TParsedFile(iter.Item);
-	    WriteLink(pf.Title, pf.FileSect);
-	    iter.Advance;
-	    if not iter.IsFinish then
-	       NextListItem;
-	 end;
-	 iter.Destroy;
+         iter := OtherFiles.ForwardStart;
+         while not iter.IsFinish do
+         begin
+            pf := TParsedFile(iter.Item);
+            WriteLink(pf.Title, pf.FileSect);
+            iter.Advance;
+            if not iter.IsFinish then
+               NextListItem;
+         end;
+         iter.Destroy;
 
-	 FinishList;
-	 NewParagraph;
+         FinishList;
+         NewParagraph;
       end;
 
       WriteHeading(GetLangString(Modules_str), bigHeadingSize);
@@ -2166,14 +2167,14 @@ begin
       iter := Units.Start;
       while not iter.IsFinish do
       begin
-	 Assert(iter.Item is TDeclaration);
-	 decl := TDeclaration(iter.Item);
-	 WriteLink(decl.QualifiedName, decl.Section);
-	 NextCell;
-	 if (decl.Comment <> nil) and (decl.Comment.Synopsis <> nil) then
-	    decl.Comment.Synopsis.WriteOut(section);
-	 NextRow;
-	 iter.Advance;
+         Assert(iter.Item is TDeclaration);
+         decl := TDeclaration(iter.Item);
+         WriteLink(decl.QualifiedName, decl.Section);
+         NextCell;
+         if (decl.Comment <> nil) and (decl.Comment.Synopsis <> nil) then
+            decl.Comment.Synopsis.WriteOut(section);
+         NextRow;
+         iter.Advance;
       end;
       iter.Destroy;
       FinishTable;
@@ -2234,9 +2235,9 @@ var
       liter := vv.DependsOn.ForwardStart;
       while not liter.IsFinish do
       begin
-	 if not TVertex2(liter.Item).Visited then
-	    TopSort(TVertex2(liter.Item));
-	 liter.Advance;
+         if not TVertex2(liter.Item).Visited then
+            TopSort(TVertex2(liter.Item));
+         liter.Advance;
       end;
       liter.Destroy;
       deque2.PushBack(vv.Name);
@@ -2251,19 +2252,19 @@ var
       ext := ExtractFileExt(currentFile);
       if PascalExtensions.Has(ext) then
       begin
-	 if not (LanguageParser is TDelphiParser) then
-	    SetLanguageParser(TDelphiParser.Create);
+         if not (LanguageParser is TDelphiParser) then
+            SetLanguageParser(TDelphiParser.Create);
       end else
       begin
-	 Result := false;
+         Result := false;
       end;
       if LanguageParser <> nil then
       begin
-	 ignoreCase := LanguageParser.IgnoreCase;
-	 if ignoreCase then
-	    StringComparer := NoCaseStringComparer
-	 else
-	    StringComparer := StringComparer;
+         ignoreCase := LanguageParser.IgnoreCase;
+         if ignoreCase then
+            StringComparer := NoCaseStringComparer
+         else
+            StringComparer := StringComparer;
       end;
    end;
 
@@ -2284,10 +2285,10 @@ begin
 
    try
       { deque2 is used to store files for which dependencies have been
-	parsed and whose interface is to be parsed }
+        parsed and whose interface is to be parsed }
       deque2 := TStringDeque.Create;
       { deque3 stores the files whose implementation only remains to
-	be parsed }
+        be parsed }
       deque3 := TStringDeque.Create;
       ParsedFiles := TStringSet.Create;
       FilesWithParsedDependencies := TStringSet.Create;
@@ -2301,205 +2302,205 @@ begin
 
       while not (FileQueue.Empty and deque2.Empty) do
       begin
-	 { parse dependencies }
-	 while not FileQueue.Empty do
-	 begin
-	    if errorCount <> 0 then
-	       raise ESrcdocError.Create('Too many errors.');
+         { parse dependencies }
+         while not FileQueue.Empty do
+         begin
+            if errorCount <> 0 then
+               raise ESrcdocError.Create('Too many errors.');
 
-	    { get the next file from the queue }
-	    recentLine := 0;
-	    currentFile := ValidateInputFile(FileQueue.Front);
-	    FileQueue.PopFront;
+            { get the next file from the queue }
+            recentLine := 0;
+            currentFile := ValidateInputFile(FileQueue.Front);
+            FileQueue.PopFront;
 
-	    if FilesWithParsedDependencies.Has(currentFile) then
-	       continue;
-	    FilesWithParsedDependencies.Insert(currentFile);
+            if FilesWithParsedDependencies.Has(currentFile) then
+               continue;
+            FilesWithParsedDependencies.Insert(currentFile);
 
-	    ext := ExtractFileExt(currentFile);
-	    if RawCommentExtensions.Has(ext) then
-	    begin
-	       if not ParsedFiles.Has(currentFile) then
-		  ProcessRawCommentFile;
-	       ParsedFiles.Insert(currentFile);
-	       continue;
-	    end else if RawTextExtensions.Has(ext) then
-	    begin
-	       if not ParsedFiles.Has(currentFile) then
-		  ProcessRawTextFile;
-	       ParsedFiles.Insert(currentFile);
-	       continue;
-	    end else if not IdentifyLanguageParser then
-	       { unknown extension }
-	    begin
-	       Error('Error: ' + currentFile + ' - unknown extension.');
-	       continue;
-	    end;
+            ext := ExtractFileExt(currentFile);
+            if RawCommentExtensions.Has(ext) then
+            begin
+               if not ParsedFiles.Has(currentFile) then
+                  ProcessRawCommentFile;
+               ParsedFiles.Insert(currentFile);
+               continue;
+            end else if RawTextExtensions.Has(ext) then
+            begin
+               if not ParsedFiles.Has(currentFile) then
+                  ProcessRawTextFile;
+               ParsedFiles.Insert(currentFile);
+               continue;
+            end else if not IdentifyLanguageParser then
+               { unknown extension }
+            begin
+               Error('Error: ' + currentFile + ' - unknown extension.');
+               continue;
+            end;
 
-	    if (optDependencies in Options) then
-	    begin
-	       afile := CheckedOpenInputFile(currentFile);
-	       if afile <> nil then
-	       begin
-		  WriteMessage('Parsing dependencies for ' + currentFile + '...');
+            if (optDependencies in Options) then
+            begin
+               afile := CheckedOpenInputFile(currentFile);
+               if afile <> nil then
+               begin
+                  WriteMessage('Parsing dependencies for ' + currentFile + '...');
 
-		  { this must be executed even if strs.Count = 0 in
-		    order to add the file to AllVerticies if it is not
-		    already there }
-		  p := TVertex2(AllVerticies.Find(currentFile));
-		  if p = nil then
-		  begin
-		     p := TVertex2.Create(currentFile);
-		     AllVerticies.Insert(currentFile, p);
-		  end;
+                  { this must be executed even if strs.Count = 0 in
+                    order to add the file to AllVerticies if it is not
+                    already there }
+                  p := TVertex2(AllVerticies.Find(currentFile));
+                  if p = nil then
+                  begin
+                     p := TVertex2.Create(currentFile);
+                     AllVerticies.Insert(currentFile, p);
+                  end;
 
-		  strs := LanguageParser.GetDependencies(afile);
-		  if strs.Count <> 0 then
-		  begin
-		     for i := 0 to strs.Count - 1 do
-		     begin
-			if ExistsInputFile(strs[i]) then
-			begin
-			   FileQueue.PushBack(strs[i]);
-			   v := TVertex2(AllVerticies.Find(strs[i]));
-			   if v = nil then
-			   begin
-			      v := TVertex2.Create(strs[i]);
-			      AllVerticies.Insert(strs[i], v);
-			   end;
-			   p.DependsOn.PushBack(v);
-			end;
-		     end;
-		  end;
-		  strs.Free;
-	       end;
+                  strs := LanguageParser.GetDependencies(afile);
+                  if strs.Count <> 0 then
+                  begin
+                     for i := 0 to strs.Count - 1 do
+                     begin
+                        if ExistsInputFile(strs[i]) then
+                        begin
+                           FileQueue.PushBack(strs[i]);
+                           v := TVertex2(AllVerticies.Find(strs[i]));
+                           if v = nil then
+                           begin
+                              v := TVertex2.Create(strs[i]);
+                              AllVerticies.Insert(strs[i], v);
+                           end;
+                           p.DependsOn.PushBack(v);
+                        end;
+                     end;
+                  end;
+                  strs.Free;
+               end;
 
-	       if optShowImplementationInfo in Options then
-	       begin
-		  { get the implementation dependencies; since the
-		    interface part does not depend on the units used
-		    in the implementation, we don't have to connect
-		    the vertex associated with the current file to the
-		    verticies associated with these modules; we only
-		    have to parse them, not matter in what order }
-		  afile := CheckedOpenInputFile(currentFile);
-		  if afile <> nil then
-		  begin
-		     strs := LanguageParser.GetImplementationDependencies(afile);
-		     Assert(strs <> nil);
-		     for i := 0 to strs.Count - 1 do
-		     begin
-			if ExistsInputFile(strs[i]) then
-			   FileQueue.PushBack(strs[i]);
-		     end;
-		     strs.Free;
-		  end;
-	       end;
+               if optShowImplementationInfo in Options then
+               begin
+                  { get the implementation dependencies; since the
+                    interface part does not depend on the units used
+                    in the implementation, we don't have to connect
+                    the vertex associated with the current file to the
+                    verticies associated with these modules; we only
+                    have to parse them, not matter in what order }
+                  afile := CheckedOpenInputFile(currentFile);
+                  if afile <> nil then
+                  begin
+                     strs := LanguageParser.GetImplementationDependencies(afile);
+                     Assert(strs <> nil);
+                     for i := 0 to strs.Count - 1 do
+                     begin
+                        if ExistsInputFile(strs[i]) then
+                           FileQueue.PushBack(strs[i]);
+                     end;
+                     strs.Free;
+                  end;
+               end;
 
-	    end else { not if optDependencies in Options }
-	       deque2.PushBack(currentFile);
-	 end; { end while not FileQueue.Empty }
+            end else { not if optDependencies in Options }
+               deque2.PushBack(currentFile);
+         end; { end while not FileQueue.Empty }
 
-	 { perform a topological sort on the graph of modules }
-	 if optDependencies in Options then
-	 begin
-	    WriteMessage('Computing dependencies...');
-	    iter := AllVerticies.Start;
-	    while not iter.Isfinish do
-	    begin
-	       v := TVertex2(iter.Item);
-	       if not v.Visited then
-		  TopSort(v);
-	       iter.Advance;
-	    end;
-	    iter.Destroy;
-	 end;
+         { perform a topological sort on the graph of modules }
+         if optDependencies in Options then
+         begin
+            WriteMessage('Computing dependencies...');
+            iter := AllVerticies.Start;
+            while not iter.Isfinish do
+            begin
+               v := TVertex2(iter.Item);
+               if not v.Visited then
+                  TopSort(v);
+               iter.Advance;
+            end;
+            iter.Destroy;
+         end;
 
-	 { parse the files themselves - except for their
-	   implementation parts }
-	 while not deque2.Empty do
-	 begin
-	    if errorCount <> 0 then
-	       raise ESrcdocError.Create('Too many errors.');
+         { parse the files themselves - except for their
+           implementation parts }
+         while not deque2.Empty do
+         begin
+            if errorCount <> 0 then
+               raise ESrcdocError.Create('Too many errors.');
 
-	    { get the next file from the queue }
-	    recentLine := 0;
-	    currentFile := deque2.Front;
-	    deque2.PopFront;
-	    if not ParsedFiles.Has(currentFile) then
-	    begin
-	       ParsedFiles.Insert(currentFile);
-	       if optShowImplementationInfo in Options then
-		  deque3.PushBack(currentFile);
+            { get the next file from the queue }
+            recentLine := 0;
+            currentFile := deque2.Front;
+            deque2.PopFront;
+            if not ParsedFiles.Has(currentFile) then
+            begin
+               ParsedFiles.Insert(currentFile);
+               if optShowImplementationInfo in Options then
+                  deque3.PushBack(currentFile);
 
-	       WriteMessage('Parsing file ' + currentFile + '...');
+               WriteMessage('Parsing file ' + currentFile + '...');
 
-	       Assert (IdentifyLanguageParser);
+               Assert (IdentifyLanguageParser);
 
-	       afile := CheckedOpenInputFile(currentFile);
-	       if afile <> nil then
-		  LanguageParser.ParseFile(afile)
-	       else
-		  Warn('File not found: ' + currentFile);
-	    end;
-	 end;
+               afile := CheckedOpenInputFile(currentFile);
+               if afile <> nil then
+                  LanguageParser.ParseFile(afile)
+               else
+                  Warn('File not found: ' + currentFile);
+            end;
+         end;
 
-	 { parse the implementations of the files }
-	 while not deque3.Empty do
-	 begin
-	    currentFile := deque3.Front;
-	    deque3.PopFront;
+         { parse the implementations of the files }
+         while not deque3.Empty do
+         begin
+            currentFile := deque3.Front;
+            deque3.PopFront;
 
-	    WriteMessage('Parsing the implementation of ' + currentFile + '...');
+            WriteMessage('Parsing the implementation of ' + currentFile + '...');
 
-	    Assert (IdentifyLanguageParser);
+            Assert (IdentifyLanguageParser);
 
-	    afile := CheckedOpenInputFile(currentFile);
-	    if afile <> nil then
-	       LanguageParser.ParseImplementation(afile);
-	 end;
+            afile := CheckedOpenInputFile(currentFile);
+            if afile <> nil then
+               LanguageParser.ParseImplementation(afile);
+         end;
       end; { end while all queues are not empty }
       if errorCount <> 0 then
-	 raise ESrcdocError.Create('Too many errors.');
+         raise ESrcdocError.Create('Too many errors.');
 
       WriteMessage('Writing output files...');
 
       iter := Units.Start;
       while not iter.IsFinish do
       begin
-	 Assert(iter.Item is TDeclaration);
+         Assert(iter.Item is TDeclaration);
 
-	 decl := TDeclaration(iter.Item);
+         decl := TDeclaration(iter.Item);
 
-	 WriteMessage('Writing output for ' + decl.Section.Name + '...');
+         WriteMessage('Writing output for ' + decl.Section.Name + '...');
 
-	 if decl is TUnitDeclaration then
-	 begin
-	    currentFile := TUnitDeclaration(decl).FileName;
-	    if not IdentifyLanguageParser then
-	       Assert(false); { should never happen }
-	 end;
+         if decl is TUnitDeclaration then
+         begin
+            currentFile := TUnitDeclaration(decl).FileName;
+            if not IdentifyLanguageParser then
+               Assert(false); { should never happen }
+         end;
 
-	 decl.WriteOut;
-	 iter.Advance;
+         decl.WriteOut;
+         iter.Advance;
       end;
       iter.Destroy;
 
       if (optGenerateClassTree in Options) and (not AllClasses.Empty) then
       begin
-	 GenerateClassTree;
+         GenerateClassTree;
       end;
       if (optGenerateInterfaceTree in Options) and (not AllInterfaces.Empty) then
       begin
-	 GenerateInterfaceTree;
+         GenerateInterfaceTree;
       end;
       if (optGenerateSymbolIndex in Options) and (not AllDeclarations.Empty) then
       begin
-	 GenerateSymbolIndex;
+         GenerateSymbolIndex;
       end;
       if optGenerateContents in Options then
       begin
-	 GenerateContents;
+         GenerateContents;
       end;
 
       WriteMessage('Finished.');
@@ -2520,12 +2521,12 @@ begin
    end else
    begin
       Warn('File ' + filename + ' not found - skipping.',
-	   currentFile, recentLine);
+           currentFile, recentLine);
    end;
 end;
 
 function TDefaultDriver.RegisterUnit(name : String;
-				     unitComment : String) : Boolean;
+                                     unitComment : String) : Boolean;
 var
    unitobj : TUnitDeclaration;
    comment : TComment;
@@ -2570,22 +2571,22 @@ begin
 end;
 
 procedure TDefaultDriver.ProvideUnitImplementationInfo(aimplUses : TStrings;
-						       aunitImplComment : String);
+                                                       aunitImplComment : String);
 var
    unitobj : TUnitDeclaration;
 begin
    Assert(currDecl is TUnitDeclaration);
    unitobj := TUnitDeclaration(currDecl);
    unitobj.ProvideImplementationInfo(aimplUses,
-				     CommentParser.ParseComment(aunitImplComment));
+                                     CommentParser.ParseComment(aunitImplComment));
 end;
 
 procedure TDefaultDriver.
    RegisterDeclarations(adecl : TTextObject; asymbols : TStrings;
-			args : TStrings; avisibility : String;
-			avisibilityType : TVisibilityType;
-			asymboltype : String; alinenum : Integer;
-			acomment : String);
+                        args : TStrings; avisibility : String;
+                        avisibilityType : TVisibilityType;
+                        asymboltype : String; alinenum : Integer;
+                        acomment : String);
 var
    declObj : TDeclaration;
    commentObj : TComment;
@@ -2604,11 +2605,11 @@ begin
    Assert(currDecl <> nil);
 
    if ((avisibilityType = vtPrivate) and
-	  not (optShowPrivate in Options)
+          not (optShowPrivate in Options)
       ) or
-	 ((avisibilityType = vtProtected) and
-	     not (optShowProtected in Options)
-	 ) then
+         ((avisibilityType = vtProtected) and
+             not (optShowProtected in Options)
+         ) then
    begin
       FreeObjects;
       args.Free;
@@ -2621,38 +2622,38 @@ begin
       commentObj := GetCommentObject(asymbols[0], acomment);
       if ignoreDecl = 0 then
       begin
-	 if CheckProfile(commentObj) then
-	 begin
-	    section := GetSection(asymbols[0], false);
-	    declobj := TDeclaration.Create(adecl, asymbols, avisibility,
-					   avisibilityType,
-					   asymboltype, alinenum, commentObj,
-					   section, currDecl);
-	    currDecl.AddDeclaration(declobj);
-	 end else
-	 begin
-	    FreeObjects;
-	    commentObj.Free;
-	 end;
+         if CheckProfile(commentObj) then
+         begin
+            section := GetSection(asymbols[0], false);
+            declobj := TDeclaration.Create(adecl, asymbols, avisibility,
+                                           avisibilityType,
+                                           asymboltype, alinenum, commentObj,
+                                           section, currDecl);
+            currDecl.AddDeclaration(declobj);
+         end else
+         begin
+            FreeObjects;
+            commentObj.Free;
+         end;
       end else
       begin
-	 Dec(ignoreDecl);
-	 { includeDecl was decreased in GetCommentObject, but now it
-	   appeared that the comment will not be used }
-	 Inc(includeDecl);
-	 recentComment.Free;
-	 recentComment := commentObj;
-	 FreeObjects;
+         Dec(ignoreDecl);
+         { includeDecl was decreased in GetCommentObject, but now it
+           appeared that the comment will not be used }
+         Inc(includeDecl);
+         recentComment.Free;
+         recentComment := commentObj;
+         FreeObjects;
       end;
    end;
 end;
 
 procedure TDefaultDriver.StartClass(decl : TTextObject; name : String;
-				    ancestors : TStrings; interfaces : TStrings;
-				    visibility : String;
-				    visibilityType : TVisibilityType;
-				    symboltype : String;
-				    linenum : Integer; comment : String);
+                                    ancestors : TStrings; interfaces : TStrings;
+                                    visibility : String;
+                                    visibilityType : TVisibilityType;
+                                    symboltype : String;
+                                    linenum : Integer; comment : String);
 var
    classobj : TClassDeclaration;
    section : TSection;
@@ -2673,23 +2674,23 @@ begin
    begin
       if CheckProfile(commentObj) then
       begin
-	 section := GetSection(name, true);
-	 classobj := TClassDeclaration.Create(decl, name, ancestors, interfaces,
-					      visibility, visibilityType,
-					      symboltype, lineNum, commentObj,
-					      section, currDecl);
-	 AllClasses.PushBack(classobj);
-	 StartBlock(classobj);
+         section := GetSection(name, true);
+         classobj := TClassDeclaration.Create(decl, name, ancestors, interfaces,
+                                              visibility, visibilityType,
+                                              symboltype, lineNum, commentObj,
+                                              section, currDecl);
+         AllClasses.PushBack(classobj);
+         StartBlock(classobj);
       end else
       begin
-	 FreeObjects;
-	 commentObj.Free;
+         FreeObjects;
+         commentObj.Free;
       end;
    end else
    begin
       Dec(ignoreDecl);
       { includeDecl was decreased in GetCommentObject, but now it
-	appeared that the comment will not be used }
+        appeared that the comment will not be used }
       Inc(includeDecl);
       recentComment.Free;
       recentComment := commentObj;
@@ -2703,11 +2704,11 @@ begin
 end;
 
 procedure TDefaultDriver.StartInterface(decl : TTextObject; aname : String;
-					ancestors : TStrings; id : String;
-					visibility : String;
-					visibilityType : TVisibilityType;
-					symboltype : String;
-					lineNum : Integer; comment : String);
+                                        ancestors : TStrings; id : String;
+                                        visibility : String;
+                                        visibilityType : TVisibilityType;
+                                        symboltype : String;
+                                        lineNum : Integer; comment : String);
 var
    obj : TInterfaceDeclaration;
    section : TSection;
@@ -2727,23 +2728,23 @@ begin
    begin
       if CheckProfile(commentObj) then
       begin
-	 section := GetSection(aname, true);
-	 obj := TInterfaceDeclaration.Create(decl, aname, ancestors, id,
-					     visibility, visibilityType,
-					     symboltype, lineNum,
-					     commentObj, section, currDecl);
-	 AllInterfaces.PushBack(obj);
-	 StartBlock(obj);
+         section := GetSection(aname, true);
+         obj := TInterfaceDeclaration.Create(decl, aname, ancestors, id,
+                                             visibility, visibilityType,
+                                             symboltype, lineNum,
+                                             commentObj, section, currDecl);
+         AllInterfaces.PushBack(obj);
+         StartBlock(obj);
       end else
       begin
-	 FreeObjects;
-	 commentObj.Free;
+         FreeObjects;
+         commentObj.Free;
       end;
    end else
    begin
       Dec(ignoreDecl);
       { includeDecl was decreased in GetCommentObject, but now it has
-	appeared that the comment will not be used }
+        appeared that the comment will not be used }
       Inc(includeDecl);
       recentComment.Free;
       recentComment := commentObj;
@@ -2804,14 +2805,14 @@ procedure TDefaultDriver.Warn(msg, filename : String; line : Integer);
 begin
    if optShowWarnings in Options then
       WriteLn('srcdoc:' + ExtractBaseName(filename) + ':' + IntToStr(line) +
-		 ': Warning: ' + msg);
+                 ': Warning: ' + msg);
 end;
 
 procedure TDefaultDriver.CommentWarn(msg : String);
 begin
    if optShowWarnings in Options then
       WriteLn('srcdoc:' + currentFile + ':' + IntToStr(recentLine) +
-		 ': Warning: ' + msg);
+                 ': Warning: ' + msg);
 end;
 
 procedure TDefaultDriver.WriteMessage(msg : String);

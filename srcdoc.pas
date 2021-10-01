@@ -1,19 +1,19 @@
 (*  This file is a part of the srcdoc program for creating
     documentation of Delphi/Pascal programs from comments in source
     files.
-    
+
     Copyright (C) 2005 by Lukasz Czajka
-    
+
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
     published by the Free Software Foundation; either version 2 of the
     License, or (at your option) any later version.
-    
+
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
     General Public License for more details.
-    
+
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
@@ -29,7 +29,7 @@ uses
 
 const
    skipSeparators = [optIgnoreHandMadeSeparators,
-                     optDiscardParagraphOnHandMadeSeparators];
+		     optDiscardParagraphOnHandMadeSeparators];
    joinComments = [optJoinComments, optNewParagraphBeforeJoinedComment];
    srcdoc_rawCommentParser = [optLinkPlurals, optMakeSynopsis];
    srcdocCommentParser = [optExplicitLocalSymbols, optEmphasis] +
@@ -37,9 +37,9 @@ const
    beautifyComments = [optBeautifyComments];
    verboseOptions = [optVerbose, optShowWarnings];
    otherOptions = [optTableBorder, optShowWarnings,
-                   optFetchCommentsFromAncestors, optGenerateClassTree,
-                   optGenerateInterfaceTree, optGenerateSymbolIndex,
-                   optGenerateContents] + joinComments;
+		   optFetchCommentsFromAncestors, optGenerateClassTree,
+		   optGenerateInterfaceTree, optGenerateSymbolIndex,
+		   optGenerateContents] + joinComments;
    userProfile = [optShowProtected];
    developerProfile = userProfile + [optShowPrivate, optShowImplementationInfo];
    VERSION_CHAR = '0';
@@ -49,14 +49,14 @@ const
    SYNOPSIS_CHAR = '4';
    FETCH_COMMENTS_CHAR = '5';
    TABLE_BORDER_CHAR = '6';
-   
-var   
+
+var
    writer : TDocWriter;
    deque : TStringDeque;
    sourceDirectories : TStrings;
    options : TOptions;
    title, profileStr : String;
-   
+
 procedure CleanExit(exitCode : Byte);
 begin
    writer.Free;
@@ -65,7 +65,7 @@ begin
    Halt(exitCode);
 end;
 
-{ used to exit when an invalid command line parameter specified }   
+{ used to exit when an invalid command line parameter specified }
 procedure ErrorExit;
 begin
    CleanExit(3);
@@ -156,7 +156,7 @@ var
    outputDirectory : String;
    c : Char;
    i : Integer;
-begin   
+begin
    with opts[OPTS_NUM] do
    begin
       name := '';
@@ -213,8 +213,8 @@ begin
       flag := nil;
       value := 't';
    end;
-   
-   { options without args } 
+
+   { options without args }
    with opts[7] do
    begin
       name := 'dependencies';
@@ -242,8 +242,8 @@ begin
       has_arg := 0;
       flag := nil;
       value := VERSION_CHAR;
-   end;   
-   
+   end;
+
    { on/off options  }
    with opts[11] do
    begin
@@ -301,7 +301,7 @@ begin
       flag := nil;
       value := FETCH_COMMENTS_CHAR;
    end;
-   
+
    { no args again }
    with opts[19] do
    begin
@@ -310,7 +310,7 @@ begin
       flag := nil;
       value := 'v';
    end;
-   
+
    with opts[20] do
    begin
       name := 'silent';
@@ -318,7 +318,7 @@ begin
       flag := nil;
       value := 'q';
    end;
-   
+
    with opts[21] do
    begin
       name := 'quiet';
@@ -326,12 +326,12 @@ begin
       flag := nil;
       value := 'q';
    end;
-   
+
    commentParser := srcdocCommentParser;
    profile := userProfile;
    profileStr := 'user';
    exclude_options := [];
-   
+
    options := otherOptions;
    writer := nil;
    deque := TStringDeque.Create();
@@ -339,163 +339,163 @@ begin
    sourceDirectories.Add('.');
    outputDirectory := '.';
    title := '';
-   
+
    repeat
       c := GetLongOpts('l:s:o:c:f:p:dbht:i:j:vq', @opts[0], unused);
       case c of
-         'l':
-            begin
-               if not SetLanguage(OptArg) then
-                  PrintUsage;
-            end;
-         's':
-            begin
-               sourceDirectories.Add(OptArg);
-            end;
-         'o':
-            begin
-               outputDirectory := OptArg;
-            end;
-         'c':
-            begin
-               if OptArg = 'srcdoc' then
-                  commentParser := srcdocCommentParser
-               else if OptArg = 'srcdoc_raw' then
-                  commentParser := srcdoc_rawCommentParser
-               else
-                  PrintUsage;
-            end;
-         'f':
-            begin
-               if OptArg <> 'html' then
-                  PrintUsage;
-            end;
-         'p':
-            begin
-               if OptArg = 'user' then
-                  profile := userProfile
-               else if OptArg = 'devel' then
-                  profile := developerProfile
-               else
-                  PrintUsage;
-               profileStr := OptArg;
-            end;
-         'd':
-            begin
-               Include(options, optDependencies);
-            end;
-         'b':
-            begin
-               options := options + beautifyComments;
-            end;
-         'h':
-            begin
-               PrintHelp;
-            end;
-         't':
-            begin
-               title := OptArg;
-            end;
-         'i':
-            begin
-               if OptArg = 'on' then
-                  Include(options, optShowImplementationInfo)
-               else if OptArg = 'off' then
-                  Include(exclude_options, optShowImplementationInfo)
-               else
-                  PrintUsage;
-            end;
-         'j':
-            begin
-               if OptArg = 'on' then
-                  options := options + joinComments
-               else if OptArg = 'off' then
-                  exclude_options := exclude_options + joinComments
-               else
-                  PrintUsage;
-            end;
-         'v':
-            begin
-               options := options + verboseOptions;
-            end;
-         FETCH_COMMENTS_CHAR:
-            begin               
-               if OptArg = 'on' then
-                  Include(options, optFetchCommentsFromAncestors)
-               else if OptArg = 'off' then
-                  Include(exclude_options, optFetchCommentsFromAncestors)
-               else
-                  PrintUsage;
-            end;
-         VERSION_CHAR:
-            begin
-               PrintVersion;
-            end;
-         PROTECTED_CHAR:
-            begin
-               if OptArg = 'on' then
-                  Include(options, optShowProtected)
-               else if OptArg = 'off' then
-                  Include(exclude_options, optShowProtected)
-               else
-                  PrintUsage;
-            end;
-         PRIVATE_CHAR:
-            begin
-               if OptArg = 'on' then
-                  Include(options, optShowPrivate)
-               else if OptArg = 'off' then
-                  Include(exclude_options, optShowPrivate)
-               else
-                  PrintUsage;
-             end;
-         SKIP_SEPARATORS_CHAR:
-            begin
-               if OptArg = 'on' then
-                  options := options + skipSeparators
-               else if OptArg = 'off' then
-                  exclude_options := exclude_options + skipSeparators
-               else
-                  PrintUsage;
-            end;
-         SYNOPSIS_CHAR:
-            begin
-               if OptArg = 'on' then
-                  Include(options, optMakeSynopsis)
-               else if OptArg = 'off' then
-                  Include(exclude_options, optMakeSynopsis)
-               else
-                  PrintUsage;
-            end;
-         TABLE_BORDER_CHAR:
-            begin
-               if OptArg = 'on' then
-                  Include(options, optTableBorder)
-               else if OptArg = 'off' then
-                  Include(exclude_options, optTableBorder)
-               else
-                  PrintUsage;
-            end;
-         '?':
-            begin
-               PrintUsage;
-            end;
+	 'l':
+	    begin
+	       if not SetLanguage(OptArg) then
+		  PrintUsage;
+	    end;
+	 's':
+	    begin
+	       sourceDirectories.Add(OptArg);
+	    end;
+	 'o':
+	    begin
+	       outputDirectory := OptArg;
+	    end;
+	 'c':
+	    begin
+	       if OptArg = 'srcdoc' then
+		  commentParser := srcdocCommentParser
+	       else if OptArg = 'srcdoc_raw' then
+		  commentParser := srcdoc_rawCommentParser
+	       else
+		  PrintUsage;
+	    end;
+	 'f':
+	    begin
+	       if OptArg <> 'html' then
+		  PrintUsage;
+	    end;
+	 'p':
+	    begin
+	       if OptArg = 'user' then
+		  profile := userProfile
+	       else if OptArg = 'devel' then
+		  profile := developerProfile
+	       else
+		  PrintUsage;
+	       profileStr := OptArg;
+	    end;
+	 'd':
+	    begin
+	       Include(options, optDependencies);
+	    end;
+	 'b':
+	    begin
+	       options := options + beautifyComments;
+	    end;
+	 'h':
+	    begin
+	       PrintHelp;
+	    end;
+	 't':
+	    begin
+	       title := OptArg;
+	    end;
+	 'i':
+	    begin
+	       if OptArg = 'on' then
+		  Include(options, optShowImplementationInfo)
+	       else if OptArg = 'off' then
+		  Include(exclude_options, optShowImplementationInfo)
+	       else
+		  PrintUsage;
+	    end;
+	 'j':
+	    begin
+	       if OptArg = 'on' then
+		  options := options + joinComments
+	       else if OptArg = 'off' then
+		  exclude_options := exclude_options + joinComments
+	       else
+		  PrintUsage;
+	    end;
+	 'v':
+	    begin
+	       options := options + verboseOptions;
+	    end;
+	 FETCH_COMMENTS_CHAR:
+	    begin
+	       if OptArg = 'on' then
+		  Include(options, optFetchCommentsFromAncestors)
+	       else if OptArg = 'off' then
+		  Include(exclude_options, optFetchCommentsFromAncestors)
+	       else
+		  PrintUsage;
+	    end;
+	 VERSION_CHAR:
+	    begin
+	       PrintVersion;
+	    end;
+	 PROTECTED_CHAR:
+	    begin
+	       if OptArg = 'on' then
+		  Include(options, optShowProtected)
+	       else if OptArg = 'off' then
+		  Include(exclude_options, optShowProtected)
+	       else
+		  PrintUsage;
+	    end;
+	 PRIVATE_CHAR:
+	    begin
+	       if OptArg = 'on' then
+		  Include(options, optShowPrivate)
+	       else if OptArg = 'off' then
+		  Include(exclude_options, optShowPrivate)
+	       else
+		  PrintUsage;
+	     end;
+	 SKIP_SEPARATORS_CHAR:
+	    begin
+	       if OptArg = 'on' then
+		  options := options + skipSeparators
+	       else if OptArg = 'off' then
+		  exclude_options := exclude_options + skipSeparators
+	       else
+		  PrintUsage;
+	    end;
+	 SYNOPSIS_CHAR:
+	    begin
+	       if OptArg = 'on' then
+		  Include(options, optMakeSynopsis)
+	       else if OptArg = 'off' then
+		  Include(exclude_options, optMakeSynopsis)
+	       else
+		  PrintUsage;
+	    end;
+	 TABLE_BORDER_CHAR:
+	    begin
+	       if OptArg = 'on' then
+		  Include(options, optTableBorder)
+	       else if OptArg = 'off' then
+		  Include(exclude_options, optTableBorder)
+	       else
+		  PrintUsage;
+	    end;
+	 '?':
+	    begin
+	       PrintUsage;
+	    end;
       end;
    until c = EndOfOptions;
-   
+
    if OptInd <= ParamCount then
    begin
       for i := OptInd to ParamCount do
-         deque.PushBack(ParamStr(i));
+	 deque.PushBack(ParamStr(i));
    end else
       PrintUsage;
-   
+
    options := options + commentParser + profile;
    options := options - exclude_options;
 
    if not DirectoryExists(outputDirectory) then
       MkDir(outputDirectory);
-   
+
    if writer = nil then
       writer := THtmlWriter.Create(outputDirectory);
 end;
@@ -504,26 +504,26 @@ begin
    ParseCommandLine;
    try
       Driver := TDefaultDriver.Create(options, writer, sourceDirectories,
-                                      title, profileStr);
+				      title, profileStr);
       Driver.Run(deque);
    except
       on err1 : ESrcDocError do
       begin
-         WriteLn(err1.Message);
+	 WriteLn(err1.Message);
 {$ifdef DEBUG }
-         raise;
+	 raise;
 {$else }
-         halt(3);
+	 halt(3);
 {$endif }
       end;
       on err2 : Exception do
       begin
-         WriteLn('srcdoc: Fatal error: ' + err2.Message);
+	 WriteLn('srcdoc: Fatal error: ' + err2.Message);
 {$ifdef DEBUG }
-         raise;
+	 raise;
 {$else }
-         halt(3);
+	 halt(3);
 {$endif }
-      end;   
+      end;
    end;
 end.

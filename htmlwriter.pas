@@ -1,19 +1,19 @@
 (*  This file is a part of the srcdoc program for creating the
     documentation of Delphi/Pascal programs from comments in source
     files.
-    
+
     Copyright (C) 2005 by Lukasz Czajka
-    
+
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
     published by the Free Software Foundation; either version 2 of the
     License, or (at your option) any later version.
-    
+
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
     General Public License for more details.
-    
+
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
@@ -40,21 +40,21 @@ type
 {$ifdef DEBUG }
       canWrite, wasOpened : Boolean;
 {$endif }
-      
+
       procedure BreakLine;
       procedure WriteString(str : String);
       procedure WriteLnString(str : String);
-      
+
       procedure OpenTextAttrs(attr : TTextAttributeSet);
       procedure CloseTextAttrs(attr : TTextAttributeSet);
-      
+
    protected
       { returns the stream to which the section should be written }
       function Stream : TFileStream; virtual; abstract;
-      
+
    public
       constructor Create(aname, asectionPath : String);
-      
+
       { writes out <text>; <attr> are the attributes of the text;
         <highlight> is true if the text should be highlighted }
       procedure WriteText(text : String;
@@ -97,48 +97,48 @@ type
       procedure FinishList; override;
       { suppresses automatic line breaking (not for all formats) }
       procedure SuppressLineBreaking; override;
-      { resumes automatic line breaking (not for all formats) }      
+      { resumes automatic line breaking (not for all formats) }
       procedure ResumeLineBreaking; override;
    end;
-   
+
    THtmlFileSection = class (THtmlSection)
    private
       { the stream associated with the section; it _is_ owned by this
         object }
       FStream : TFileStream;
-      
+
    protected
       function Stream : TFileStream; override;
-      
+
    public
       constructor Create(aname : String; parent : TSection);
       destructor Destroy; override;
-      
+
       procedure Open(title : String); override;
-      procedure Close; override;      
+      procedure Close; override;
    end;
-   
+
    THtmlSubSection = class (THtmlSection)
    private
       { the stream to which self should write; _not_ owned by self;
         owned by an appropriate THtmlFileSection }
       FStreamCache : TFileStream;
-      
+
    protected
       function Stream : TFileStream; override;
-      
+
    public
       constructor Create(aname : String; parent : TSection);
-      
+
       procedure Open(title : String); override;
-      procedure Close; override;      
+      procedure Close; override;
    end;
-   
+
    THtmlContentsSection = class (THtmlFileSection)
    public
       procedure Open(title : String); override;
    end;
-   
+
    THtmlWriter = class (TDocWriter)
    public
       constructor Create(aoutputDir : String);
@@ -149,7 +149,7 @@ type
       function RegisterInterfaceTreeSection : TSection; override;
       function RegisterSymbolIndexSection : TSection; override;
    end;
-   
+
 implementation
 
 uses
@@ -159,8 +159,8 @@ const
    newlineStr = #10;
    cssFile = 'default.css';
    htmlSectionSeparator = '__-';
-   
-var   
+
+var
    { a map of characters that must be replaced with character
      entities to those entities }
    badChars : array[#0..#255] of String;
@@ -173,9 +173,9 @@ var
    { indicate whether there are a class tree, interface tree and the
      symbol index written }
    isclasstree, isInterfaceTree, isSymbolIndex : Boolean;
-   
+
 { ----------------------- helper routines ---------------------------------- }
-   
+
 procedure WriteLnToStream(s : TStream; str : String);
 begin
    if str <> '' then
@@ -263,9 +263,9 @@ end;
 procedure THtmlSection.WriteText(text : String; attr : TTextAttributeSet);
 begin
    text := ConvertBadChars(text);
-   
+
    OpenTextAttrs(attr);
-   
+
    if saPreformatted in attr then
    begin
       BreakLine;
@@ -447,9 +447,9 @@ begin
    inherited;
 end;
 
-function THtmlFileSection.Stream : TFileStream; 
+function THtmlFileSection.Stream : TFileStream;
 begin
-{$ifdef DEBUG }   
+{$ifdef DEBUG }
    Assert(canWrite);
 {$endif }
    Result := FStream;
@@ -474,16 +474,16 @@ begin
                     cssFile + '">');
    WriteLnString('</head>');
    WriteLnString('<body>');
-   WriteLnString('<p>');   
+   WriteLnString('<p>');
 end;
 
-procedure THtmlFileSection.Close;      
+procedure THtmlFileSection.Close;
 begin
-{$ifdef DEBUG }   
+{$ifdef DEBUG }
    Assert(wasOpened and canWrite);
 {$endif }
    BreakLine;
-   WriteLnString('</p>');   
+   WriteLnString('</p>');
    WriteLnString('</body>');
    WriteLnString('</html>');
 {$ifdef DEBUG }
@@ -521,9 +521,9 @@ begin
 {$endif }
 end;
 
-function THtmlSubsection.Stream : TFileStream; 
+function THtmlSubsection.Stream : TFileStream;
 begin
-{$ifdef DEBUG }   
+{$ifdef DEBUG }
    Assert(canWrite);
 {$endif }
    Result := FStreamCache;
@@ -534,7 +534,7 @@ var
    path : String;
    i : Integer;
 begin
-{$ifdef DEBUG }   
+{$ifdef DEBUG }
    Assert(not wasOpened);
 {$endif }
 {$ifdef DEBUG }
@@ -548,9 +548,9 @@ begin
    WriteLnString('<a name="' + path + '"><hr></a>');
 end;
 
-procedure THtmlSubsection.Close;      
+procedure THtmlSubsection.Close;
 begin
-{$ifdef DEBUG }   
+{$ifdef DEBUG }
    Assert(wasOpened and canWrite);
 {$endif }
 {$ifdef DEBUG }
@@ -584,7 +584,7 @@ begin
    WriteLnToStream(f, '</frameset>');
    WriteLnToStream(f, '</html>');
    f.Free;
-   
+
    { create the navigation file  }
    f := TFileStream.Create(outputDir + 'srcdoc_autogenerated_navigation.html',
                            fmCreate);
@@ -620,7 +620,7 @@ begin
    WriteLnToStream(f, '</body>');
    f.Free;
 end;
- 
+
 { --------------------------- THtmlWriter --------------------------- }
 
 constructor THtmlWriter.Create(aoutputDir : String);
@@ -629,16 +629,16 @@ var
    stream : TFileStream;
 begin
    inherited;
-   
+
    for i := 0 to 255 do
       badChars[Char(i)] := '';
    badChars['"'] := '&quot;';
    badChars['&'] := '&amp;';
    badChars['<'] := '&lt;';
    badChars['>'] := '&gt;';
-   
+
    outputDir := OutputDirectory;
-   
+
    { create the .css file }
    stream := TFileStream.Create(outputDir + cssFile, fmCreate);
    WriteLnToStream(stream, '.program_code {font-family : monospace}');
@@ -693,7 +693,7 @@ end;
 function THtmlWriter.RegisterSymbolIndexSection : TSection;
 begin
    Result := THtmlContentsSection.Create('srcdoc_autogenerated_symbol_index', nil);
-   isSymbolIndex := true;   
+   isSymbolIndex := true;
 end;
 
 end.

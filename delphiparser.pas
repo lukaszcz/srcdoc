@@ -1,19 +1,19 @@
 (*  This file is a part of the srcdoc program for creating
     documentation of Delphi/Pascal programs from comments in
     source files.
-    
+
     Copyright (C) 2005 by Lukasz Czajka
-    
+
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
     published by the Free Software Foundation; either version 2 of the
     License, or (at your option) any later version.
-    
+
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
     General Public License for more details.
-    
+
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
@@ -35,7 +35,7 @@ var
 
 type
    TDeclText = class;
-   
+
    TVisibility = (visGlobal, visLocal, visLocalThreadLocal, visGlobalThreadLocal,
                   visPublic, visPrivate, visProtected);
    TVisibilityRec = record
@@ -97,7 +97,7 @@ type
       { a stack of TStringSet's; used to save declaredSymbols when
         entering a new block }
       declaredSymbolsStack : TStackAdt;
-      
+
       { a set of AnsiString's of names of valid calling convention
         modifiers }
       CallModifiers : TStringSet;
@@ -117,11 +117,11 @@ type
       TypeSectionKeywords : TMap;
       ClassSectionKeywords : TMap;
       InterfaceSectionKeywords : TMap;
-      
+
       { a map from the visibility type to the data associated with
         this visibility }
       VisibilityRec : array[visGlobal..visProtected] of TVisibilityRec;
-      
+
       { gives an error }
       procedure Error(msg : String);
       { reads a delphi token; the original case is preserved, so
@@ -141,10 +141,10 @@ type
       { checks whether <symbol> is a valid pascal name; gives an error
         if it is not }
       procedure CheckValidName(const symbol : String);
-      
+
       procedure StartBlock;
       procedure FinishBlock;
-      
+
       { calls the handler associated with token; <table> is a table of
         handler functions associated with keywords; passes token to
         the handler function and returns the result of this function;
@@ -158,16 +158,16 @@ type
       function CallHandler(const token : String;
                            const table : TMap;
                            resetDecl : Boolean) : String;
-      
+
       { creates a new reader for <afile>; the old reader is freed }
       procedure OpenReader(afile : TFileStream);
       { closes the current reader and the file associated with it;
         it is important for systems which do not allow a file to be
-	referenced by more than one file handle at a time }
+        referenced by more than one file handle at a time }
       procedure CloseReader;
       { this function should be called each time when beginning to
         parse a unit; resets some vital variables }
-      procedure InitializeUnit(afile : TFileStream); 
+      procedure InitializeUnit(afile : TFileStream);
       { frees the objects used in parsing the units that would be
         normally passed to ProvideUnitInfo or
         ProvideUnitImplementationInfo; call this only if you don't
@@ -191,7 +191,7 @@ type
         symbols declared are not added to the set of symbols.  }
       function ReadVariableList(const token : String; ignoreSymbols : Boolean;
                                 list : TStrings) : String;
-      
+
       { various parsing functions (conforming to the THandler
         specification) }
       function ParseUses(const token : String) : String;
@@ -212,7 +212,7 @@ type
       function ParseEmptyStatement(const token : String) : String;
       function ParseBegin(const token : String) : String;
       function ParseEnd(const token : String) : String;
-      
+
    public
       constructor Create;
       destructor Destroy; override;
@@ -227,13 +227,13 @@ type
       { parses a piece of code converting it to a TTextObject }
       function ParseCode(code : String) : TTextObject; override;
       { converts a qualified reference to an identifier into a
-        reference to a section } 
+        reference to a section }
       function ParseIdentifierRef(ref : String) : String; override;
       { returns the token used for scope resolution }
       function ScopeResolutionToken : String; override;
       function IgnoreCase : Boolean; override;
    end;
-   
+
    { an object of this class should be created and re-used later as
      the creation imposes certain overhead; }
    TDeclText = class
@@ -250,7 +250,7 @@ type
       currentDeclStr : String;
       { true if the token most recently appended to currentDeclStr
         requires no space after it (used exclusively by AppendToken,
-        StartDeclText and FinishDeclText) }   
+        StartDeclText and FinishDeclText) }
       NoSpace : Boolean;
       { a set of highlighted keywords' names }
       HighlightedKeywords : TStringSet;
@@ -258,7 +258,7 @@ type
       NoSpaceBeforeToken : TStringSet;
       { a set of token2 after which a space shouldn't be put }
       NoSpaceAfterToken : TStringSet;
-      
+
       procedure FinishDeclTextObject(keyword, symbol : Boolean);
    public
       { the constructor should be called when all fields of <parser>
@@ -296,7 +296,7 @@ uses
 constructor TDeclText.Create(parser : TDelphiParser);
 begin
    FParser := parser;
-   
+
    HighlightedKeywords := TStringSet.Create;
    HighlightedKeywords.ItemComparer := NoCaseStringComparer;
 
@@ -306,10 +306,10 @@ begin
    NoSpaceAfterToken := TStringSet.Create;
    NoSpaceAfterToken.ItemComparer := NoCaseStringComparer;
 
-   SetUnionCopyToArg(HighlightedKeywords, FParser.CallModifiers, StringProjection);
-   SetUnionCopyToArg(HighlightedKeywords, FParser.RoutineModifiers, StringProjection);
-   SetUnionCopyToArg(HighlightedKeywords, FParser.ParameterModifiers, StringProjection);
-   
+   SetUnionCopyToArg(HighlightedKeywords, FParser.CallModifiers, StringIdentity);
+   SetUnionCopyToArg(HighlightedKeywords, FParser.RoutineModifiers, StringIdentity);
+   SetUnionCopyToArg(HighlightedKeywords, FParser.ParameterModifiers, StringIdentity);
+
    with HighlightedKeywords do
    begin
       Insert('absolute');
@@ -392,7 +392,7 @@ begin
       Insert('write');
       Insert('xor');
    end;
-   
+
    with NoSpaceBeforeToken do
    begin
       Insert(';');
@@ -403,7 +403,7 @@ begin
       Insert('[');
       Insert(']');
    end;
-   
+
    with NoSpaceAfterToken do
    begin
       Insert('(');
@@ -449,7 +449,7 @@ begin
    Assert(declText <> nil);
    if not (NoSpaceBeforeToken.Has(token) or NoSpace) then
       currentDeclStr := currentDeclStr + ' ';
-   
+
    if HighlightedKeywords.Has(token) then
    begin
       FinishDeclTextObject(false, false);
@@ -457,7 +457,7 @@ begin
       FinishDeclTextObject(true, false);
    end else
       currentDeclStr := currentDeclStr + token;
-   
+
    NoSpace := NoSpaceAfterToken.Has(token);
 end;
 
@@ -517,21 +517,21 @@ end;
 constructor TDelphiParser.Create;
 begin
    inherited;
-   
+
    GlobalKeywords := TMap.Create(THashTable.Create);
    TypeSectionKeywords := TMap.Create(THashTable.Create);
    ClassSectionKeywords := TMap.Create(THashTable.Create);
    InterfaceSectionKeywords := TMap.Create(THashTable.Create);
-   
+
    CallModifiers := TStringHashTable.Create;
    CallModifiers.ItemComparer := NoCaseStringComparer;
-   
+
    ParameterModifiers := TStringSet.Create;
    ParameterModifiers.ItemComparer := NoCaseStringComparer;
 
    BlockStarters := TStringSet.Create;
    BlockStarters.ItemComparer := NoCaseStringComparer;
-   
+
    EndBlockStarters := TStringSet.Create;
    EndBlockStarters.ItemComparer := NoCaseStringComparer;
 
@@ -555,14 +555,14 @@ begin
    GlobalKeywords[';'] := THandler.Create(@ParseEmptyStatement);
    { necessary to handle @decl comment-start commands }
    GlobalKeywords['}'] := THandler.Create(@ParseEmptyStatement);
-   
+
    TypeSectionKeywords['class'] := THandler.Create(@ParseClass);
    TypeSectionKeywords['object'] := THandler.Create(@ParseClass);
    TypeSectionKeywords['record'] := THandler.Create(@ParseRecord);
    TypeSectionKeywords['interface'] := THandler.Create(@ParseInterface);
    TypeSectionKeywords['procedure'] := THandler.Create(@ParseProceduralType);
    TypeSectionKeywords['function'] := THandler.Create(@ParseProceduralType);
-   
+
    ClassSectionKeywords['function'] := THandler.Create(@ParseRoutine);
    ClassSectionKeywords['procedure'] := THandler.Create(@ParseRoutine);
    ClassSectionKeywords['constructor'] := THandler.Create(@ParseRoutine);
@@ -577,14 +577,14 @@ begin
    ClassSectionKeywords['end'] := THandler.Create(@ParseEnd);
    ClassSectionKeywords[';'] := THandler.Create(@ParseEmptyStatement);
    ClassSectionKeywords['}'] := THandler.Create(@ParseEmptyStatement);
-   
+
    InterfaceSectionKeywords['function'] := THandler.Create(@ParseRoutine);
    InterfaceSectionKeywords['procedure'] := THandler.Create(@ParseRoutine);
    InterfaceSectionKeywords['property'] := THandler.Create(@ParseProperty);
    InterfaceSectionKeywords['end'] := THandler.Create(@ParseEnd);
    InterfaceSectionkeywords[';'] := THandler.Create(@ParseEmptyStatement);
    InterfaceSectionkeywords['}'] := THandler.Create(@ParseEmptyStatement);
-   
+
    with VisibilityRec[visGlobal] do
    begin
       FName := GetLangString(global_str);
@@ -622,7 +622,7 @@ begin
       FName := GetLangString(protected_str);
       FType := vtProtected;
    end;
-   
+
    with CallModifiers do
    begin
       Insert('register');
@@ -633,9 +633,9 @@ begin
       Insert('saveregisters');
       Insert('popstack');
    end;
-   
-   RoutineModifiers := TStringHashTable(CallModifiers.CopySelf(StringProjection));
-   
+
+   RoutineModifiers := TStringHashTable(CallModifiers.CopySelf);
+
    with RoutineModifiers do
    begin
       Insert('[public]');
@@ -656,14 +656,14 @@ begin
       Insert('reintroduce');
       Insert('virtual');
    end;
-   
+
    with ParameterModifiers do
    begin
       Insert('const');
       Insert('var');
       Insert('out');
    end;
-   
+
    with BlockStarters do
    begin
       Insert('begin');
@@ -672,7 +672,7 @@ begin
       Insert('const');
       Insert('asm');
    end;
-   
+
    { stores everything that is ended with 'end' }
    with EndBlockStarters do
    begin
@@ -683,21 +683,21 @@ begin
       Insert('record');
       Insert('class');
    end;
-   
+
    declText := TDeclText.Create(self);
    declaredSymbolsStack := TStack.Create; { no disposer }
    declaredSymbolsStack.OwnsItems := false;
-   
+
    Assert(declaredSymbols = nil);
 end; { end constructor }
 
-destructor TDelphiParser.Destroy; 
+destructor TDelphiParser.Destroy;
 begin
    declText.Free;
    Assert((declaredSymbolsStack = nil) or (declaredSymbolsStack.Empty));
    Assert(declaredSymbols = nil);
    declaredSymbolsStack.Free;
-   
+
    reader.Free;
 
    GlobalKeywords.Free;
@@ -708,7 +708,7 @@ begin
    CallModifiers.Free;
    RoutineModifiers.Free;
    ParameterModifiers.Free;
-   
+
    BlockStarters.Free;
    EndBlockStarters.Free;
 
@@ -825,7 +825,7 @@ begin
                   Result := ReadToken();
                end else
                   Result := c;
-            end               
+            end
          else
             begin
                Result := c;
@@ -859,7 +859,7 @@ begin
          begin
             token := ReadToken;
          end;
-         
+
          if (token = '{') or (token = '(*') or (token = '//') then
          begin
             if not (optJoinComments in Driver.Options) then
@@ -1006,7 +1006,7 @@ end;
 procedure TDelphiParser.InitializeUnit(afile : TFileStream);
 begin
    OpenReader(afile);
-   
+
    fInImplementation := false;
    fInInterface := false;
    currentVisibility := visLocal;
@@ -1015,7 +1015,7 @@ begin
    implUses := TStringList.Create;
    currentUses := interfaceUses;
    unitNameStr := '';
-      
+
    StartBlock;
 end;
 
@@ -1038,11 +1038,11 @@ begin
    begin
       if token = 'library' then
          currentVisibility := visGlobal;
-      
+
       unitNameStr := reader.ReadWord;
       if unitNameStr = '' then
          Error('Expected unit or program name.');
-      
+
       { skip optional program params if present }
       token := ReadToken;
       if token = '(' then
@@ -1051,7 +1051,7 @@ begin
             token := Readtoken;
          token := ReadToken;
       end;
-      
+
       if token <> ';' then
          Error('Expected ;');
    end else
@@ -1115,7 +1115,7 @@ begin
          Exit;
       end else
          token := ReadToken;
-   end;   
+   end;
 end;
 
 procedure TDelphiParser.ExecuteParsingLoop(token : String);
@@ -1132,7 +1132,7 @@ begin
       if token = '' then
          token := ReadToken;
    end;
-   
+
    FinishBlock;
 end;
 
@@ -1148,9 +1148,9 @@ begin
       savedSymbols := declaredSymbols;
       declaredSymbols := nil;
    end;
-   
+
    token2 := token;
-   
+
    { read in a parameter modifier, if any is present }
    if ParameterModifiers.Has(token2) then
    begin
@@ -1164,15 +1164,15 @@ begin
       CheckValidName(token2);
       list.Add(token2);
       declText.AppendToken(token2);
-      
+
       token2 := ReadToken;
       if token2 <> ',' then
          break;
       declText.AppendToken(token2);
-      
+
       token2 := ReadToken;
    end;
-   
+
    if token2 = ':' then
    begin
       declText.AppendToken(token2);
@@ -1189,7 +1189,7 @@ begin
    end;
 
    Result := token2;
-   
+
    if ignoreSymbols then
       declaredSymbols := savedSymbols;
 end;
@@ -1259,7 +1259,7 @@ begin
                token2 := ReadToken;
             end;
             declText.AppendToken(';');
-            
+
             { register the declaration }
             linenum := declText.LineNumber;
             Driver.RegisterDeclaration(declText.GetText, recentSymbol, nil,
@@ -1269,7 +1269,7 @@ begin
                                        recentComment);
             token2 := ReadToken;
          end;
-         
+
          if token2 = '' then
             token2 := ReadToken;
       end else
@@ -1291,9 +1291,9 @@ begin
       begin
          symbol := token2;
          CheckValidName(symbol);
-         
+
          declText.AppendToken(symbol);
-         
+
          token2 := ReadToken;
          while token2 <> ';' do
          begin
@@ -1316,7 +1316,7 @@ begin
          { we have to read the next token because otherwise ; would be
            interpreted as an empty statement by the handler above }
          token2 := ReadToken;
-         
+
          linenum := declText.LineNumber;
          Driver.RegisterDeclaration(declText.GetText, symbol, nil,
                                     VisibilityRec[currentVisibility].FName,
@@ -1389,7 +1389,7 @@ var
    linenum : Integer;
 begin
    arguments := TStringList.Create;
-   
+
    declText.AppendToken(token);
    { don't get confused by a class member routine (a dot inside the
      name) }
@@ -1399,12 +1399,12 @@ begin
    if LowerCase(token) <> 'operator' then
       CheckValidName(symbol);
    declText.AppendToken(symbol);
-   
+
    token2 := ReadToken;
    if token2 = '(' then
    begin
       declText.AppendToken('(');
-      
+
       token2 := ReadToken;
       if token2 <> ')' then
       begin
@@ -1419,7 +1419,7 @@ begin
          declText.AppendToken(token2);
       token2 := ReadToken;
    end;
-   
+
    { read the optional function return }
    if token2 = ':' then
    begin
@@ -1436,7 +1436,7 @@ begin
       token2 := Readtoken;
    end;
    declText.AppendToken(';');
-   
+
    token2 := ReadToken;
    isForward := false;
    while RoutineModifiers.Has(token2) do
@@ -1453,13 +1453,13 @@ begin
       declText.AppendToken(';');
       token2 := ReadToken;
    end;
-   
+
    if arguments.Count = 0 then
    begin
       arguments.Free;
       arguments := nil;
    end;
-   
+
    if not (isForward or fInInterface) and BlockStarters.Has(token2) then
       { we have to skip the actual code of the routine }
    begin
@@ -1479,7 +1479,7 @@ begin
                                  LowerCase(token), linenum, recentComment);
    end else
       arguments.Free;
-   
+
    Result := token2;
 end; { end ParseRoutine }
 
@@ -1499,8 +1499,8 @@ begin
    symbol := ReadToken;
    CheckValidName(symbol);
    declText.AppendToken(symbol);
-   
-   token2 := ReadToken;   
+
+   token2 := ReadToken;
    if token2 = '[' then
    begin
       args := TStringList.Create;
@@ -1516,7 +1516,7 @@ begin
       token2 := ReadToken;
    end else
       args := nil;
-   
+
    { read the type }
    if token2 <> ':' then
       Error('Expected '':''');
@@ -1524,14 +1524,14 @@ begin
    token2 := ReadToken;
    declText.AppendGlobalSymbol(token2);
    token2 := ReadToken;
-   
+
    while token2 <> ';' do
    begin
       declText.AppendToken(token2);
       token2 := ReadToken;
    end;
    declText.AppendToken(';');
-   
+
    token2 := ReadToken;
    if token2 = 'default' then
    begin
@@ -1540,13 +1540,13 @@ begin
       declText.AppendToken(';');
       token2 := '';
    end;
-   
+
    linenum := declText.Linenumber;
    Driver.RegisterDeclaration(declText.GetText, symbol, args,
                               VisibilityRec[currentVisibility].FName,
                               VisibilityRec[currentVisibility].FType,
                               GetLangString(property_str), linenum, recentComment);
-   
+
    Result := token2;
 end; { end ParseProperty }
 
@@ -1559,9 +1559,9 @@ var
 begin
    ancestors := TStringList.Create;
    interfaces := TStringList.Create;
-   
+
    declText.AppendToken(token);
-   
+
    token2 := ReadToken;
    if token2 = ';' then
       { it is a forward declaration - return }
@@ -1580,7 +1580,7 @@ begin
          CheckValidName(token2);
          ancestors.Add(token2);
          declText.AppendToken(token2);
-         
+
          token2 := ReadToken;
          while token2 <> ')' do
          begin
@@ -1599,7 +1599,7 @@ begin
       declText.AppendToken(token2);
       token2 := ReadToken;
    end; { end main if }
-   
+
    linenum := declText.LineNumber;
    Driver.StartClass(declText.GetText, recentSymbol, ancestors, interfaces,
                      VisibilityRec[currentVisibility].FName,
@@ -1608,9 +1608,9 @@ begin
 
    savedVisibility := currentVisibility;
    currentVisibility := visPublic;
-   
+
    StartBlock;
-   
+
    while Lowercase(token2) <> 'end' do
    begin
       recentComment := ReadComments(token2, token2);
@@ -1630,14 +1630,14 @@ begin
 
          token2 := ReadToken;
       end;
-      
+
       if token2 = '' then
          token2 := ReadToken;
    end;
    Expect(';');
-   
+
    FinishBlock;
-   
+
    Driver.FinishClass;
    currentVisibility := savedVisibility;
    Result := '';
@@ -1661,7 +1661,7 @@ begin
       Result := '';
       Exit;
    end;
-   
+
    ancestors := TStringList.Create;
    if token2 = '(' then
    begin
@@ -1677,7 +1677,7 @@ begin
       declText.AppendToken(')');
       token2 := ReadToken;
    end;
-   
+
    with reader do
    begin
       if token2 = '[' then
@@ -1694,18 +1694,18 @@ begin
       end else
          guid := '';
    end;
-   
+
    linenum := declText.LineNumber;
    Driver.StartInterface(declText.GetText, recentSymbol, ancestors, guid,
                          VisibilityRec[currentVisibility].FName,
                          VisibilityRec[currentVisibility].FType,
                          GetLangString(interface_str), linenum, recentComment);
-   
+
    savedVisibility := currentVisibility;
    currentVisibility := visPublic;
-   
+
    StartBlock;
-   
+
    while Lowercase(token2) <> 'end' do
    begin
       recentComment := ReadComments(token2, token2);
@@ -1720,9 +1720,9 @@ begin
    end;
    Expect(';');
    currentVisibility := savedVisibility;
-   
+
    FinishBlock;
-   
+
    Driver.FinishInterface;
 
    Result := '';
@@ -1735,7 +1735,7 @@ var
    linenum : Integer;
 begin
    declText.AppendToken(token);
-   
+
    variables := TStringList.Create;
    ReadComments(token2, '');
    while LowerCase(token2) <> 'end' do
@@ -1764,7 +1764,7 @@ begin
    declText.AppendToken('end');
    declText.AppendToken(';');
    Expect(';');
-   
+
    linenum := declText.LineNumber;
    Driver.RegisterDeclaration(declText.GetText, recentSymbol, variables,
                               VisibilityRec[currentVisibility].FName,
@@ -1796,7 +1796,7 @@ begin
       token2 := ReadToken;
    end;
    declText.AppendToken(';');
-   
+
    { check for a calling convention modifier }
    token2 := ReadToken;
    if CallModifiers.Has(token2) then
@@ -1807,7 +1807,7 @@ begin
       Result := '';
    end else
       Result := token2;
-   
+
    linenum := declText.LineNumber;
    Driver.RegisterDeclaration(declText.GetText, recentSymbol, nil,
                               VisibilityRec[currentVisibility].FName,
@@ -1847,7 +1847,7 @@ begin
       metBegin := false;
       nestCount := 0;
    end;
-   
+
    while not ((nestCount = 0) and metBegin) do
    begin
       REadComments(token2, '');
@@ -1903,32 +1903,32 @@ var
    str, token : String;
 begin
    Assert(afile <> nil);
-   
+
    InitializeUnit(afile);
-      
+
    str := ReadComments(token, '');
    ReadUnitName(token);
    unitcomment := ReadComments(token, '');
    if unitcomment = '' then
       unitcomment := str;
-      
+
    if not Driver.RegisterUnit(unitNameStr, unitcomment) then
    begin
       FreeObjectsUsedInParsingUnit;
       Exit;
    end;
-      
-   token := LowerCase(token);      
-      
+
+   token := LowerCase(token);
+
    if token = 'interface' then
    begin
       fInInterface := true;
       currentVisibility := visGlobal;
       token := LowerCase(ReadToken);
    end; { else we are reading a program file }
-      
+
    ExecuteParsingLoop(token);
-      
+
    try
       Driver.ProvideUnitInfo(interfaceUses);
    finally
@@ -1950,27 +1950,27 @@ begin
       InitializeUnit(afile);
       currentUses := implUses;
       currentVisibility := visLocal;
-      
+
       ReadComments(token, '');
       ReadUnitName(token);
-      
+
       SkipToImplementation;
       if (not reader.Eof) and Driver.OpenUnit(unitNameStr) then
       begin
          unitImplComment := ReadComments(token, '');
-      
+
          ExecuteParsingLoop(token);
       end else
       begin
          FreeObjectsUsedInParsingUnit;
          Exit;
       end;
-      
+
    except
       FreeObjectsUsedInParsingUnit;
       raise;
    end;
-   
+
    try
       Driver.ProvideUnitImplementationInfo(implUses, unitImplComment);
    finally
@@ -1986,9 +1986,9 @@ function TDelphiParser.GetDependencies(afile : TFileStream) : TStrings;
 begin
    OpenReader(afile);
    Result := ParseNearestUses;
-   { note: we have to close the file first for systems 
-     where a file cannot be referenced by more than one 
-     file handle }		  
+   { note: we have to close the file first for systems
+     where a file cannot be referenced by more than one
+     file handle }
    CloseReader;
 end;
 
@@ -2078,6 +2078,3 @@ finalization
    PascalExtensions.Free;
 
 end.
-
-
-

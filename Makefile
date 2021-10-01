@@ -1,8 +1,7 @@
-
 ifneq ($(findstring debug, $(MAKECMDGOALS)),)
 DEBUG = true
-INCLUDE_DIR = /usr/local/include/debug/
-LIB_DIR = /usr/local/lib/debug/
+INCLUDE_DIR = /usr/local/include/
+LIB_DIR = /usr/local/lib/
 else
 INCLUDE_DIR = /usr/local/include/
 LIB_DIR = /usr/local/lib/
@@ -11,7 +10,7 @@ endif
 override OPTS += -Si -S2 -Sh -XD -Fu$(INCLUDE_DIR) -Fl$(LIB_DIR)
 
 ifdef DEBUG
-override OPTS += -vewn -Sa -g -gl -dDEBUG
+override OPTS += -vewn -Sa -g -gh -gl -dDEBUG
 else
 override OPTS += -Ur -O3 -Xs
 endif
@@ -21,7 +20,7 @@ override OPTS += -Twin32
 endif
 
 obj_suffix := .o
-prog_suffix := 
+prog_suffix :=
 
 UNITS := $(patsubst %.pas, %$(obj_suffix), $(filter-out srcdoc.pas, $(wildcard *.pas)))
 
