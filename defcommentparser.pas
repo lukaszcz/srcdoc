@@ -95,6 +95,7 @@ type
       function HandleDiscardCommands(const command : String) : String;
       function HandleDiscardComments(const command : String) : String;
       function HandleEmphasis(const command : String) : String;
+      function HandleFetchRelated(const command : String) : String;
       function HandleHeading(const command : String) : String;
       function HandleIgnoreDecl(const command : String) : String;
       function HandleIncludeDecl(const command : String) : String;
@@ -372,6 +373,8 @@ begin
       THandler.Create(@HandleEmphasis);
    CommandHandlers['emphasis'] :=
       THandler.Create(@HandleEmphasis);
+   CommandHandlers['fetch-related'] :=
+      THandler.Create(@HandleFetchRelated);
    CommandHandlers['h'] :=
       THandler.Create(@HandleHeading);
    CommandHandlers['heading'] :=
@@ -588,6 +591,12 @@ begin
    end;
 end;
 
+function TDefaultCommentParser.HandleFetchRelated(const command : String) : String;
+begin
+   Result := '';
+   currFetchRelated := true;
+end;
+
 function TDefaultCommentParser.HandleHeading(const command : String) : String;
 var
    size, num : Integer;
@@ -752,7 +761,7 @@ begin
          ReadChar;
          if chAlpha in CharTable[PeekChar] then
          begin
-            cmd := REadWord;
+            cmd := ReadWord;
             if cmd = 'endpre' then
                break
             else
