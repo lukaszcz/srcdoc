@@ -11,7 +11,7 @@ Requirements
 ------------
 * Linux
 * [Free Pascal](https://www.freepascal.org)
-* [PascalAdt](https://pascaladt.github.io) library
+* [PascalAdt](https://pascaladt.github.io) library version 1.0.1
 
 Installation and usage
 ----------------------
@@ -30,6 +30,6 @@ Some output examples:
 Copyright and license
 ---------------------
 
-Copyright (C) 2005-2021 by Lukasz Czajka.
+Copyright (C) 2005-2024 by Lukasz Czajka.
 
 Distributed under the terms of GPL 2. See [LICENSE](LICENSE).

@@ -9,7 +9,7 @@
 
 To compile the program you will need the FPC >= 2.0 compiler, which
 may be downloaded from http://www.freepascal.org, and the PascalAdt
-library which may be downloaded from
+library (version 1.0.1) which may be downloaded from
 https://github.com/lukaszcz/pascaladt/.
 
 2. Linux/Unix.

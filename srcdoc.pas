@@ -22,6 +22,7 @@
 program srcdoc;
 
 {$apptype console }
+{$linklib pascaladt-1.0.1 }
 
 uses
    SysUtils, Classes, Getopts, adtqueue,

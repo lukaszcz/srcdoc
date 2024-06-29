@@ -77,7 +77,7 @@ type
         the percentage of the width of the whole table); after calling
         this routine the next output will be written in the first cell
         of the table }
-      procedure StartTable(const widths : TIntegerArray;
+      procedure StartTable(const widths : TArrayOfInteger;
                            cols : Integer); override;
       { moves to the next cell in the current row in the table being
         currently writed out; if there is no next cell in the current
@@ -165,7 +165,7 @@ var
      entities to those entities }
    badChars : array[#0..#255] of String;
    { the widths of the current table }
-   currTableWidths : TIntegerArray;
+   currTableWidths : TArrayOfInteger;
    { the current column in the current table }
    currTableCol : Integer;
    { the output directory; after setting once should be read only }
@@ -329,7 +329,7 @@ begin
    WriteLnString('&nbsp;&nbsp;&nbsp;');
 end;
 
-procedure THtmlSection.StartTable(const widths : TIntegerArray;
+procedure THtmlSection.StartTable(const widths : TArrayOfInteger;
                                   cols : Integer);
 begin
    currTableWidths := widths;

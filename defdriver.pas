@@ -457,7 +457,7 @@ type
 
    TDeclarationComparer = class (TFunctor, IBinaryComparer)
    public
-      function Compare(obj1, obj2 : TObject) : IndexType;
+      function Compare(obj1, obj2 : TObject) : Integer;
    end;
 
    TDeclarationNameComparer = class (TFunctor, IUnaryPredicate)
@@ -482,7 +482,7 @@ end;
 
 function BreakPathIntoSections(path : String) : StringArrayType;
 var
-   i, j : IndexType;
+   i, j : Integer;
    tab : TKmpTable;
 begin
    i := 0; j := 0;
@@ -514,7 +514,7 @@ end;
 
 { ---------------------- TDeclarationComparer ----------------------- }
 
-function TDeclarationComparer.Compare(obj1, obj2 : TObject) : IndexType;
+function TDeclarationComparer.Compare(obj1, obj2 : TObject) : Integer;
 var
    vis1, vis2 : TVisibilityType;
 begin
@@ -694,7 +694,7 @@ end;
 
 procedure TDeclaration.WriteNavigationPanel;
 var
-   widths : TIntegerArray;
+   widths : TArrayOfInteger;
    cols : Integer;
 begin
    with Section do
@@ -903,7 +903,7 @@ end;
 procedure TBlockDeclaration.WriteDeclarations;
 var
    i, j : Integer;
-   widths : TIntegerArray;
+   widths : TArrayOfInteger;
    decl : TDeclaration;
 begin
    with Section do
@@ -1854,10 +1854,10 @@ type
 type
    TVertexComparer = class (TFunctor, IBinaryComparer)
    public
-      function Compare(obj1, obj2 : TObject) : IndexType;
+      function Compare(obj1, obj2 : TObject) : Integer;
    end;
 
-   function TVertexComparer.Compare(obj1, obj2 : TObject) : IndexType;
+   function TVertexComparer.Compare(obj1, obj2 : TObject) : Integer;
    begin
       Assert(obj1 is TVertex);
       Assert(obj2 is TVertex);
@@ -2023,10 +2023,10 @@ end;
 type
    TLocalDeclComparer = class (TFunctor, IBinaryComparer)
    public
-      function Compare(obj1, obj2 : TObject) : IndexType;
+      function Compare(obj1, obj2 : TObject) : Integer;
    end;
 
-   function TLocalDeclComparer.Compare(obj1, obj2 : TObject) : IndexType;
+   function TLocalDeclComparer.Compare(obj1, obj2 : TObject) : Integer;
    begin
       Assert(obj1 is TBasicDeclaration);
       Assert(obj2 is TBasicDeclaration);
@@ -2126,7 +2126,7 @@ var
    iter : TForwardIterator;
    pf : TParsedFile;
    decl : TDeclaration;
-   widths : TIntegerArray;
+   widths : TArrayOfInteger;
 begin
    WriteMessage('Generating the table of contents...');
 

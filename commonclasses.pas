@@ -29,7 +29,7 @@ uses
    SysUtils, Classes, adtdarray, adtcont, adthash, adtarray;
 
 type
-   TIntegerArray = array of Integer;
+   TArrayOfInteger = array of Integer;
    TStringSet = TStringHashTable;
    TStack = TArray;
 
@@ -162,12 +162,12 @@ type
    private
       { a list of lists of TTextObject's }
       rows : TListAdt;
-      widths : TIntegerArray;
+      widths : TArrayOfInteger;
       cols : Integer;
    public
       { the argument is owned by the object and destroyed together
         with it }
-      constructor Create(arows : TListAdt; awidths : TIntegerArray;
+      constructor Create(arows : TListAdt; awidths : TArrayOfInteger;
                          acols : Integer);
       destructor Destroy; override;
       procedure WriteOut(section : TSection); override;
@@ -266,7 +266,7 @@ type
         the percentage of the width of the whole table); after calling
         this routine the next output will be written in the first cell
         of the table }
-      procedure StartTable(const widths : TIntegerArray;
+      procedure StartTable(const widths : TArrayOfInteger;
                            cols : Integer); virtual; abstract;
       { moves to the next cell in the current row in the table being
         currently writed out; if there is no next cell in the current
@@ -788,7 +788,7 @@ begin
    Result := TParagraph.Create(newObjs);
 end;
 
-constructor TTable.Create(arows : TListAdt; awidths : TIntegerArray;
+constructor TTable.Create(arows : TListAdt; awidths : TArrayOfInteger;
                           acols : Integer);
 begin
    inherited Create;
