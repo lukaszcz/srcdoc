@@ -9,7 +9,7 @@
 VERSION="0.1"
 
 # VERSION_SUFFIX must have a dash ("-") prepended and nothing should be
-# appended to the version number 
+# appended to the version number
 
 VERSION_SUFFIX="-$VERSION"
 
@@ -60,7 +60,7 @@ echo
 echo "See the INSTALL file first."
 echo
 
-read -e -p "Enter the directory with PascalAdt library binaries (default /usr/local/lib/): "
+read -e -p "Enter the directory with PascalAdt 1.0.2 library binaries (default /usr/local/lib/): "
 if [ $REPLY ]; then
     process_dirname
     LIB_DIR=$REPLY
@@ -68,7 +68,7 @@ else
     LIB_DIR="/usr/local/lib/"
 fi
 
-read -e -p "Enter the directory with PascalAdt .ppu files (default /usr/local/include/): "
+read -e -p "Enter the directory with PascalAdt 1.0.2 .ppu files (default /usr/local/include/): "
 if [ $REPLY ]; then
     process_dirname
     INCLUDE_DIR=$REPLY

@@ -11,7 +11,7 @@ Requirements
 ------------
 * Linux
 * [Free Pascal](https://www.freepascal.org)
-* [PascalAdt](https://pascaladt.github.io) library version 1.0.1
+* [PascalAdt](https://pascaladt.github.io) library version 1.0.2
 
 Installation and usage
 ----------------------
